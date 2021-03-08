@@ -233,6 +233,11 @@ nhn.husky.SE2M_ExecCommand = jindo.$Class({
 	},
 	
 	$ON_EXECCOMMAND : function(sCommand, bUserInterface, vValue){
+
+		//console.log("sCommand = " + sCommand);
+		//console.log("bUserInterface = " + bUserInterface);
+		//console.log("vValue = " + vValue);
+
 		var bSelectedBlock = false;
 		var htSelectedTDs = {};
 		var oSelection = this.oApp.getSelection();
@@ -243,7 +248,7 @@ nhn.husky.SE2M_ExecCommand = jindo.$Class({
 		this.oApp.exec("IS_SELECTED_TD_BLOCK",['bIsSelectedTd',htSelectedTDs]);
 		bSelectedBlock = htSelectedTDs.bIsSelectedTd;
 
-		if( bSelectedBlock){
+		if(bSelectedBlock){
 			if(sCommand == "indent"){
 				this.oApp.exec("SET_LINE_BLOCK_STYLE", [null, jindo.$Fn(this._indentMargin, this).bind()]);
 			}else if(sCommand == "outdent"){

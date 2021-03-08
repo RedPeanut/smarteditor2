@@ -143,7 +143,7 @@ nhn.husky.SE2M_Toolbar = jindo.$Class({
 		this._htOptions = htOptions || {};
 		this.htUIList = {};
 		this.htWrappedUIList = {};
-
+		
 		this.aUICmdMap = {};
 		this._assignHTMLElements(oAppContainer);
 	},
@@ -522,6 +522,7 @@ nhn.husky.SE2M_Toolbar = jindo.$Class({
 	},
 
 	$ON_REGISTER_UI_EVENT : function(sUIName, sEvent, sCmd, aParams){
+		//console.log("$ON_REGISTER_UI_EVENT() is called...");
 		//[SMARTEDITORSUS-966][IE8 표준/IE 10] 호환 모드를 제거하고 사진 첨부 시 에디팅 영역의 
 		//						커서 주위에 <sub><sup> 태그가 붙어서 글자가 매우 작게 되는 현상
 		//원인 : 아래의 [SMARTEDITORSUS-901] 수정 내용에서 윗첨자 아랫첨자 이벤트 등록 시 

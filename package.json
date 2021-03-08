@@ -7,17 +7,22 @@
     "coverage": "jest --coverage",
     "codecov": "jest --coverage && codecov",
     "lint": "eslint -f table ./workspace",
+
     "docs:clean": "rm -rf build/docs",
     "docs:serve": "gitbook --port 3000 serve ./workspace/docs/user_guide ./build/docs/user_guide",
     "docs:build": "gitbook build ./workspace/docs/user_guide ./build/docs/user_guide",
     "docs:publish": "gh-pages -d ./build/docs/user_guide -e ./user_guide -m 'update user_guide'",
     "docs:deploy": "npm run docs:build && npm run docs:publish",
-    "start": "webpack-dev-server --open --hot",
+
+    "start": "webpack-dev-server --hot",
     "build": "webpack --env.production",
+
     "preversion": "npm test",
     "postversion": "git push --follow-tags && npm publish",
+
     "prepublishOnly": "npm run build",
     "postpublish": "npm pack",
+
     "deploy": "npm version patch",
     "postdeploy": "gh-pages -d ./dist -e ./demo -m 'update demo'",
     "deploy:dev": "npm publish --tag dev"

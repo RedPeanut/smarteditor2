@@ -1314,6 +1314,7 @@ nhn.husky.SE_EditingArea_WYSIWYG = jindo.$Class({
 	},
 
 	setIR : function(sIR){
+		//console.log("setIR() is called...");
 		// [SMARTEDITORSUS-875] HTML 모드의 beautify에서 추가된 공백을 다시 제거
 		//sIR = sIR.replace(/(>)([\n\r\t\s]*)([^<]?)/g, "$1$3").replace(/([\n\r\t\s]*)(<)/g, "$2")
 		// --[SMARTEDITORSUS-875]
