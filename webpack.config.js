@@ -12,11 +12,11 @@ module.exports = (env = {}) => {
     return {
         mode: env.production ? 'production' : 'development',
         entry: {
-            'bundle/husky-range': './workspace/src/bundle/husky-range.js',
-            'bundle/base': './workspace/src/bundle/base.js',
-            'bundle/extra': './workspace/src/bundle/extra.js',
-            'bundle/lazy': './workspace/src/bundle/lazy.js',
-            'bundle/index': './workspace/src/bundle/index.js',
+            //'bundle/husky-range': './workspace/src/bundle/husky-range.js',
+            //'bundle/base': './workspace/src/bundle/base.js',
+            //'bundle/extra': './workspace/src/bundle/extra.js',
+            //'bundle/lazy': './workspace/src/bundle/lazy.js',
+            //'bundle/index': './workspace/src/bundle/index.js',
             'smarteditor2': './workspace/src/bundle/index.js'
         },
         output: {
