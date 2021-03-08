@@ -69,18 +69,20 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	
 	oEditor.registerPlugin(new nhn.husky.SE_EditingAreaManager("WYSIWYG", oIRTextarea, htDimension,  htParams.fOnBeforeUnload, elAppContainer));
 	oEditor.registerPlugin(new nhn.husky.SE_EditingArea_WYSIWYG(oWYSIWYGIFrame));			// Tab Editor 모드
-	oEditor.registerPlugin(new nhn.husky.SE_EditingArea_HTMLSrc(oHTMLSrc));					// Tab HTML 모드
-	oEditor.registerPlugin(new nhn.husky.SE_EditingArea_TEXT(oTextArea));					// Tab Text 모드
-	oEditor.registerPlugin(new nhn.husky.SE2M_EditingModeChanger(elAppContainer, htConversionMode));	// 모드간 변경(Editor, HTML, Text)
-	oEditor.registerPlugin(new nhn.husky.SE_PasteHandler()); 								// WYSIWYG Paste Handler
-	
-	oEditor.registerPlugin(new nhn.husky.HuskyRangeManager(oWYSIWYGIFrame));
-	oEditor.registerPlugin(new nhn.husky.Utils());
+	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_HTMLSrc(oHTMLSrc));					// Tab HTML 모드
+	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_TEXT(oTextArea));					// Tab Text 모드
+	//oEditor.registerPlugin(new nhn.husky.SE2M_EditingModeChanger(elAppContainer, htConversionMode));	// 모드간 변경(Editor, HTML, Text)
+
+	//oEditor.registerPlugin(new nhn.husky.SE_PasteHandler()); 								// WYSIWYG Paste Handler
+	//oEditor.registerPlugin(new nhn.husky.HuskyRangeManager(oWYSIWYGIFrame));
+	//oEditor.registerPlugin(new nhn.husky.Utils());
 	oEditor.registerPlugin(new nhn.husky.SE2M_UtilPlugin());
-	oEditor.registerPlugin(new nhn.husky.SE_WYSIWYGStyler());
-	oEditor.registerPlugin(new nhn.husky.SE2M_Toolbar(elAppContainer));
+	//oEditor.registerPlugin(new nhn.husky.SE_WYSIWYGStyler());
+
+	oEditor.registerPlugin(new nhn.husky.SE2M_Menubar(elAppContainer));
+	//oEditor.registerPlugin(new nhn.husky.SE2M_Toolbar(elAppContainer));
 	
-	oEditor.registerPlugin(new nhn.husky.Hotkey());											// 단축키
+	/* oEditor.registerPlugin(new nhn.husky.Hotkey());											// 단축키
 	oEditor.registerPlugin(new nhn.husky.SE_EditingAreaVerticalResizer(elAppContainer, htConversionMode));	// 편집영역 리사이즈
 	oEditor.registerPlugin(new nhn.husky.DialogLayerManager());
 	oEditor.registerPlugin(new nhn.husky.ActiveLayerManager());
@@ -118,7 +120,8 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	}
 	
 	oEditor.registerPlugin(new nhn.husky.SE_ToolbarToggler(elAppContainer, htParams.bUseToolbar));
-	oEditor.registerPlugin(new nhn.husky.SE2M_Accessibility(elAppContainer, htParams.I18N_LOCALE));	// 에디터내의 웹접근성 관련 기능모음 플러그인 
+	oEditor.registerPlugin(new nhn.husky.SE2M_Accessibility(elAppContainer, htParams.I18N_LOCALE));	// 에디터내의 웹접근성 관련 기능모음 플러그인 */
+
 	
 	return oEditor;
 };
