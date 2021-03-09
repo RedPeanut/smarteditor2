@@ -18,7 +18,13 @@
 </head>
 <body>
 
-<div class="menu_bar">
+	
+<!-- SE2 Markup Start -->	
+<div id="smart_editor2">
+
+	<a href="#se2_iframe" class="blind">글쓰기영역으로 바로가기</a>
+
+	<div class="menu_bar">
 	<div class="title_panel">
 		<div class="property_title"><span>파일</span></div>
 		<div class="menu_box">
@@ -35,12 +41,9 @@
 	<div class="title_panel"><div class="property_title"><span>쪽</span></div></div>
 	<div class="title_panel"><div class="property_title"><span>표</span></div></div>
 	<div class="title_panel"><div class="property_title"><span>도구</span></div></div>
-</div>
+	</div>
 
-<!-- SE2 Markup Start -->	
-<div id="smart_editor2">
-
-	<div id="smart_editor2_content"><a href="#se2_iframe" class="blind">글쓰기영역으로 바로가기</a>
+	<div id="smart_editor2_content">
 		
 		<div class="se2_tool" id="se2_tool">
 			
@@ -590,8 +593,8 @@
 		<!-- 입력 -->
 		<div class="se2_input_area husky_seditor_editing_area_container">
 			
+			<iframe src="about:blank" id="se2_iframe" name="se2_iframe" class="se2_input_canvas" width="400" height="300" title="글쓰기 영역 : 도구 모음은 ALT+F10을, 도움말은 ALT+0을 누르세요." frameborder="0" style="display:block;"></iframe>
 			
-			<iframe src="about:blank" id="se2_iframe" name="se2_iframe" class="se2_input_wysiwyg" width="400" height="300" title="글쓰기 영역 : 도구 모음은 ALT+F10을, 도움말은 ALT+0을 누르세요." frameborder="0" style="display:block;"></iframe>
 			<textarea name="" rows="10" cols="100" title="HTML 편집 모드" class="se2_input_syntax se2_input_htmlsrc" style="display:none;outline-style:none;resize:none"> </textarea>
 			<textarea name="" rows="10" cols="100" title="TEXT 편집 모드" class="se2_input_syntax se2_input_text" style="display:none;outline-style:none;resize:none;"> </textarea>
 			
