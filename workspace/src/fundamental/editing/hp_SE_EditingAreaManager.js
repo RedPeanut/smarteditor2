@@ -217,7 +217,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	$ON_MSG_APP_READY : function(){
 		this.htOptions =  this.oApp.htOptions[this.name] || {};
 		this.sDefaultEditingMode = this.htOptions["sDefaultEditingMode"] || this.sDefaultEditingMode;
-		this.iframeWindow = this.oApp.getWYSIWYGWindow();
+		this.iframeWindow = this.oApp.getCanvasWindow();
 		this.oApp.exec("REGISTER_CONVERTERS", []);
 		this.oApp.exec("CHANGE_EDITING_MODE", [this.sDefaultEditingMode, true]);
 		this.oApp.exec("LOAD_CONTENTS_FIELD", [false]);
@@ -607,7 +607,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		var sContents;
 
 		if(this.oApp.applyConverter){
-			sContents = this.oApp.applyConverter("IR_TO_DB", sIR, this.oApp.getWYSIWYGDocument());
+			sContents = this.oApp.applyConverter("IR_TO_DB", sIR, this.oApp.getCanvasDocument());
 		}else{
 			sContents = sIR;
 		}
@@ -635,7 +635,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	 * 
 	 */
 	_convertLastBrToNbsp : function(){
-		var elBody = this.oApp.getWYSIWYGDocument().body,
+		var elBody = this.oApp.getCanvasDocument().body,
 		aBr, elBr,
 		elBrContainer, elImgContainer, elNextToImgContainer, elUndesiredContainer,
 		aImg, elImg, nImgWidth,
@@ -793,7 +793,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		var sIR;
 
 		if(this.oApp.applyConverter){
-			sIR = this.oApp.applyConverter("DB_TO_IR", sContents, this.oApp.getWYSIWYGDocument());
+			sIR = this.oApp.applyConverter("DB_TO_IR", sContents, this.oApp.getCanvasDocument());
 		}else{
 			sIR = sContents;
 		}

@@ -23,7 +23,8 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 
 	var elAppContainer = (elSeAppContainer || jindo.$("smart_editor2"));	
 	var elEditingArea = jindo.$$.getSingle("DIV.husky_seditor_editing_area_container", elAppContainer);
-	var oWYSIWYGIFrame = jindo.$$.getSingle("IFRAME.se2_input_wysiwyg", elEditingArea);
+	var oCanvasIFrame = jindo.$$.getSingle("IFRAME.se2_input_canvas", elEditingArea);
+
 	var oIRTextarea = elIRField?elIRField:jindo.$$.getSingle("TEXTAREA.blind", elEditingArea);
 	var oHTMLSrc = jindo.$$.getSingle("TEXTAREA.se2_input_htmlsrc", elEditingArea);
 	var oTextArea = jindo.$$.getSingle("TEXTAREA.se2_input_text", elEditingArea);
@@ -67,8 +68,9 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	
 	var aAdditionalFontList = htParams.aAdditionalFontList;
 	
-	oEditor.registerPlugin(new nhn.husky.SE_EditingAreaManager("WYSIWYG", oIRTextarea, htDimension,  htParams.fOnBeforeUnload, elAppContainer));
-	oEditor.registerPlugin(new nhn.husky.SE_EditingArea_WYSIWYG(oWYSIWYGIFrame));			// Tab Editor 모드
+	oEditor.registerPlugin(new nhn.husky.SE_EditingAreaManager("Canvas", oIRTextarea, htDimension,  htParams.fOnBeforeUnload, elAppContainer));
+	oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Canvas(oCanvasIFrame));			// Canvas 모드
+	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_WYSIWYG(oWYSIWYGIFrame));			// Tab Editor 모드
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_HTMLSrc(oHTMLSrc));					// Tab HTML 모드
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_TEXT(oTextArea));					// Tab Text 모드
 	//oEditor.registerPlugin(new nhn.husky.SE2M_EditingModeChanger(elAppContainer, htConversionMode));	// 모드간 변경(Editor, HTML, Text)
