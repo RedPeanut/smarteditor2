@@ -22,7 +22,7 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	}
 
 	var elAppContainer = (elSeAppContainer || jindo.$("smart_editor2"));	
-	var elEditingArea = jindo.$$.getSingle("DIV.husky_seditor_editing_area_container", elAppContainer);
+	var elEditingArea = jindo.$$.getSingle("DIV.container", elAppContainer);
 	var oCanvasIFrame = jindo.$$.getSingle("IFRAME.se2_input_canvas", elEditingArea);
 
 	var oIRTextarea = elIRField?elIRField:jindo.$$.getSingle("TEXTAREA.blind", elEditingArea);

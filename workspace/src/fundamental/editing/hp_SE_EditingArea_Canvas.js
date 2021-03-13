@@ -583,7 +583,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 			// [SMARTEDITORSUS-1213][IE9, 10] 사진 삭제 후 zindex 1000인 div가 잔존하는데, 그 위로 썸네일 drag를 시도하다 보니 drop이 불가능.
 			var htBrowser = jindo.$Agent().navigator();
 			if(htBrowser.ie && htBrowser.nativeVersion > 8){ 
-				var elFirstChild = jindo.$$.getSingle("DIV.husky_seditor_editing_area_container").childNodes[0];
+				var elFirstChild = jindo.$$.getSingle("DIV.container").childNodes[0];
 				if((elFirstChild.tagName == "DIV") && (elFirstChild.style.zIndex == 1000)){
 					elFirstChild.parentNode.removeChild(elFirstChild);
 				}
