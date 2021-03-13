@@ -1,12 +1,12 @@
-var node = require('./node');
-var editor = require('./editor');
-var doc = require('./doc');
-var dom = require('./dom');
-var runs = require('./runs');
-var html = require('./html');
-var frame = require('./frame');
-var text = require('./text');
-var rect = require('./rect');
+var node = require('../carota/node');
+var editor = require('../carota/editor');
+var doc = require('../carota/doc');
+var dom = require('../carota/dom');
+var runs = require('../carota/runs');
+var html = require('../carota/html');
+var frame = require('../carota/frame');
+var text = require('../carota/text');
+var rect = require('../carota/rect');
 
 var bundle = {
     node: node,
