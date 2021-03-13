@@ -6,7 +6,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	status : nhn.husky.PLUGIN_STATUS.NOT_READY,
 
 	sMode : "Canvas",
-	iframe : null,
+	elDocument : null,
 	doc : null,
 	
 	bStopCheckingBodyHeight : false, 
@@ -16,57 +16,16 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	nScrollbarWidth : 0,
 	
 	iLastUndoRecorded : 0,
-//	iMinUndoInterval : 50,
+	//iMinUndoInterval : 50,
 	
 	_nIFrameReadyCount : 50,
 	
 	bWYSIWYGEnabled : false,
 	
-	$init : function(iframe){
-		this.iframe = jindo.$(iframe);		
-		var oAgent = jindo.$Agent().navigator();		
-		// IE에서 에디터 초기화 시에 임의적으로 iframe에 포커스를 반쯤(IME 입력 안되고 커서만 깜박이는 상태) 주는 현상을 막기 위해서 일단 iframe을 숨겨 뒀다가 CHANGE_EDITING_MODE에서 위지윅 전환 시 보여준다.
-		// 이런 현상이 다양한 요소에 의해서 발생하며 발견된 몇가지 경우는,
-		// - frameset으로 페이지를 구성한 후에 한개의 frame안에 버튼을 두어 에디터로 링크 할 경우
-		// - iframe과 동일 페이지에 존재하는 text field에 값을 할당 할 경우
-		if(oAgent.ie){
-			this.iframe.style.display = "none";
-		}
-	
-		// IE8 : 찾기/바꾸기에서 글자 일부에 스타일이 적용된 경우 찾기가 안되는 브라우저 버그로 인해 EmulateIE7 파일을 사용
-		// <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
-		this.sBlankPageURL = "smart_editor2_document.html";
-		//this.sBlankPageURL_EmulateIE7 = "smart_editor2_inputarea_ie8.html";
-		//this.aAddtionalEmulateIE7 = [];
-
-		this.htOptions = nhn.husky.SE2M_Configuration.SE_EditingAreaManager;	
-		if (this.htOptions) {
-			this.sBlankPageURL = this.htOptions.sBlankPageURL || this.sBlankPageURL;
-			//this.sBlankPageURL_EmulateIE7 = this.htOptions.sBlankPageURL_EmulateIE7 || this.sBlankPageURL_EmulateIE7;
-			//this.aAddtionalEmulateIE7 = this.htOptions.aAddtionalEmulateIE7 || this.aAddtionalEmulateIE7;
-		}
-		
-		//this.aAddtionalEmulateIE7.push(8); // IE8은 Default 사용
-
-		this.sIFrameSrc = this.sBlankPageURL;
-		/* if(oAgent.ie && jindo.$A(this.aAddtionalEmulateIE7).has(oAgent.nativeVersion)) {
-			this.sIFrameSrc = this.sBlankPageURL_EmulateIE7;
-		} */
-
-		iframe = this.iframe;
-		var sIFrameSrc = this.sIFrameSrc,
-			fHandlerSuccess = jindo.$Fn(this.initIframe, this).bind(),
-			fHandlerFail =jindo.$Fn(function(){this.iframe.src = sIFrameSrc;}, this).bind();
-			
-		if(!oAgent.ie || (oAgent.version >=9 && !!document.addEventListener)){
-			iframe.addEventListener("load", fHandlerSuccess, false);
-			iframe.addEventListener("error", fHandlerFail, false);
-		}else{
-			iframe.attachEvent("onload", fHandlerSuccess);
-			iframe.attachEvent("onerror", fHandlerFail);
-		}
-		iframe.src = sIFrameSrc; 	
-		this.elEditingArea = iframe;
+	$init : function(elDocument){
+		this.elDocument = jindo.$(elDocument);		
+		this.htOptions = nhn.husky.SE2M_Configuration.SE_EditingAreaManager;
+		this.elEditingArea = elDocument;
 	},
 
 	$BEFORE_MSG_APP_READY : function(){

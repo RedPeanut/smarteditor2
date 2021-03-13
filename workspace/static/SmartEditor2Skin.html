@@ -597,8 +597,23 @@
 		<!-- 입력 -->
 		<div class="se2_document_wrap container">
 			
-			<iframe src="about:blank" id="se2_iframe" name="se2_iframe" class="se2_input_canvas" width="400" height="300" title="글쓰기 영역 : 도구 모음은 ALT+F10을, 도움말은 ALT+0을 누르세요." frameborder="0" style="display:block;"></iframe>
-			
+			<!-- <iframe src="about:blank" id="se2_iframe" name="se2_iframe" class="se2_input_canvas" width="400" height="300" title="글쓰기 영역 : 도구 모음은 ALT+F10을, 도움말은 ALT+0을 누르세요." frameborder="0" style="display:block;"></iframe> -->
+
+			<div id="document" class="se2_document" title="">
+				<div class="ruler">
+					<div class="ruler_inner">
+						<div class="ruler_background"></div>
+						<div class="ruler_margin"></div>
+						<div class="ruler_control"></div>
+					</div>
+				</div>
+				<div class="edit_area">
+					<canvas id="PaperCanvas"></canvas>
+					<canvas id="EditCanvas"></canvas>
+					<div id="CURSOR" class=""></div>
+				</div>
+			</div>
+
 			<textarea name="" rows="10" cols="100" title="HTML 편집 모드" class="se2_input_syntax se2_input_htmlsrc" style="display:none;outline-style:none;resize:none"> </textarea>
 			<textarea name="" rows="10" cols="100" title="TEXT 편집 모드" class="se2_input_syntax se2_input_text" style="display:none;outline-style:none;resize:none;"> </textarea>
 			

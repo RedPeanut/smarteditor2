@@ -214,3 +214,12 @@ body,#smart_editor2,#smart_editor2 p,#smart_editor2 h1,#smart_editor2 h2,#smart_
 .info.btn_icon {background-position: -240px 0}
 
 #smart_editor2 .menu_bar .menu_box a:not(.disabled).hover {background-color:#e9eefb;border-radius:.2em;border:1px solid #90a5dc;/* text-decoration:none; */}
+
+/*  */
+#smart_editor2 #document {background-color:#f2f2f2;}
+
+/* 눈금자 */
+#smart_editor2 #document .ruler {height:36px;background-color:blue;opacity:0.2;}
+
+/*  */
+#smart_editor2 #document .edit_area {margin:0 auto;}
