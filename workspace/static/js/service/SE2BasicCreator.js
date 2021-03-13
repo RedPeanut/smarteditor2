@@ -22,12 +22,12 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	}
 
 	var elAppContainer = (elSeAppContainer || jindo.$("smart_editor2"));	
-	var elEditingArea = jindo.$$.getSingle("DIV.container", elAppContainer);
-	var oCanvasIFrame = jindo.$$.getSingle("IFRAME.se2_input_canvas", elEditingArea);
+	var elContainer = jindo.$$.getSingle("DIV.container", elAppContainer);
+	var oCanvasIFrame = jindo.$$.getSingle("IFRAME.se2_input_canvas", elContainer);
 
-	var oIRTextarea = elIRField?elIRField:jindo.$$.getSingle("TEXTAREA.blind", elEditingArea);
-	var oHTMLSrc = jindo.$$.getSingle("TEXTAREA.se2_input_htmlsrc", elEditingArea);
-	var oTextArea = jindo.$$.getSingle("TEXTAREA.se2_input_text", elEditingArea);
+	var oIRTextarea = elIRField?elIRField:jindo.$$.getSingle("TEXTAREA.blind", elContainer);
+	var oHTMLSrc = jindo.$$.getSingle("TEXTAREA.se2_input_htmlsrc", elContainer);
+	var oTextArea = jindo.$$.getSingle("TEXTAREA.se2_input_text", elContainer);
 	
 	if(!htParams){ 
 		htParams = {}; 
