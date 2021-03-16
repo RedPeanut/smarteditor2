@@ -1,7 +1,7 @@
 {
-  "name": "smarteditor2",
-  "version": "2.10.1-alpha.0",
-  "description": "WYSIWYG HTML text editor",
+  "name": "webhwp",
+  "version": "0.0.1",
+  "description": "HWP web editor based smarteditor2",
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
@@ -26,16 +26,18 @@
     "javascript",
     "WYSIWYG",
     "editor",
-    "SmartEditor"
+    "SmartEditor",
+    "Canvas",
+    "hwp"
   ],
-  "homepage": "https://github.com/naver/smarteditor2",
+  "homepage": "https://github.com/RedPeanut/smarteditor2.git",
   "bugs": {
-    "url": "https://github.com/naver/smarteditor2/issues"
+    "url": "https://"
   },
   "license": "LGPL-2.1",
   "author": {
-    "name": "NAVER corp.",
-    "email": "dl_smarteditor2open@navercorp.com"
+    "name": "Home.",
+    "email": "zamong99@gmail.com"
   },
   "main": "dist/js/smarteditor2.js",
   "files": [
@@ -43,7 +45,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/naver/smarteditor2.git"
+    "url": "https://github.com/RedPeanut/smarteditor2.git"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
