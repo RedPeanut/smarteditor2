@@ -217,7 +217,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	$ON_MSG_APP_READY : function(){
 		this.htOptions =  this.oApp.htOptions[this.name] || {};
 		this.sDefaultEditingMode = this.htOptions["sDefaultEditingMode"] || this.sDefaultEditingMode;
-		this.iframeWindow = this.oApp.getCanvasWindow();
+		//this.iframeWindow = this.oApp.getWindow();
 		this.oApp.exec("REGISTER_CONVERTERS", []);
 		this.oApp.exec("CHANGE_EDITING_MODE", [this.sDefaultEditingMode, true]);
 		this.oApp.exec("LOAD_CONTENTS_FIELD", [false]);
@@ -379,9 +379,9 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 
 	$ON_REGISTER_EDITING_AREA : function(oEditingAreaPlugin){
 		this.oEditingMode[oEditingAreaPlugin.sMode] = oEditingAreaPlugin;
-		if(oEditingAreaPlugin.sMode == 'WYSIWYG'){
+		/* if(oEditingAreaPlugin.sMode == 'Canvas'){
 			this.attachDocumentEvents(oEditingAreaPlugin.oEditingArea);
-		}
+		} */
 		this._setEditingAreaDimension(oEditingAreaPlugin);
 	},
 
@@ -793,7 +793,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		var sIR;
 
 		if(this.oApp.applyConverter){
-			sIR = this.oApp.applyConverter("DB_TO_IR", sContents, this.oApp.getCanvasDocument());
+			sIR = this.oApp.applyConverter("DB_TO_IR", sContents, this.oApp.getDocument());
 		}else{
 			sIR = sContents;
 		}

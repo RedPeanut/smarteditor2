@@ -22,17 +22,22 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	
 	bWYSIWYGEnabled : false,
 	
-	$init : function(elDocument){
-		this.elDocument = jindo.$(elDocument);		
+	$init : function(elAppContainer){
+		var elContainer = jindo.$$.getSingle("div.container", elAppContainer);
+		this.elDocument = jindo.$$.getSingle("div#document", elContainer);
 		this.htOptions = nhn.husky.SE2M_Configuration.SE_EditingAreaManager;
-		this.elEditingArea = elDocument;
+		this.elEditingArea = jindo.$$.getSingle("div.editing_area", this.elDocument);
+		this.elEditor = carota.editor.create(this.elEditingArea);
+		
+		var fHandlerSuccess, fHandlerFail;
+		this.status = nhn.husky.PLUGIN_STATUS.READY;
 	},
 
 	$BEFORE_MSG_APP_READY : function(){
-		this.oEditingArea = this.iframe.contentWindow.document;
+		//this.oEditingArea = this.iframe.contentWindow.document;
 		this.oApp.exec("REGISTER_EDITING_AREA", [this]);
-		this.oApp.exec("ADD_APP_PROPERTY", ["getCanvasWindow", jindo.$Fn(this.getWindow, this).bind()]);
-		this.oApp.exec("ADD_APP_PROPERTY", ["getCanvasDocument", jindo.$Fn(this.getDocument, this).bind()]);
+		this.oApp.exec("ADD_APP_PROPERTY", ["getWindow", jindo.$Fn(this.getWindow, this).bind()]);
+		this.oApp.exec("ADD_APP_PROPERTY", ["getDocument", jindo.$Fn(this.getDocument, this).bind()]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["isCanvasEnabled", jindo.$Fn(this.isWYSIWYGEnabled, this).bind()]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["getRawHTMLContents", jindo.$Fn(this.getRawHTMLContents, this).bind()]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["setRawHTMLContents", jindo.$Fn(this.setRawHTMLContents, this).bind()]);
@@ -41,8 +46,8 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 			this.oApp.exec('ENABLE_WYSIWYG_RULER');
 		}
 		
-		this.oApp.registerBrowserEvent(this.getDocument().body, 'paste', 'EVENT_EDITING_AREA_PASTE');
-		this.oApp.registerBrowserEvent(this.getDocument().body, 'drop', 'EVENT_EDITING_AREA_DROP');
+		this.oApp.registerBrowserEvent(this.getDocument(), 'paste', 'EVENT_EDITING_AREA_PASTE');
+		this.oApp.registerBrowserEvent(this.getDocument(), 'drop', 'EVENT_EDITING_AREA_DROP');
 	},
 
 	$ON_MSG_APP_READY : function(){
@@ -158,165 +163,24 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	},
 	
 	/**
-	 * [SMARTEDITORSUS-677] 붙여넣기나 내용 입력에 대한 편집영역 자동 확장 처리
-	 */
-	$AFTER_PASTE_HTML : function(){
-		if(!this.bAutoResize){
-			return;
-		}
-		
-		this._setAutoResize();
-	},
-
-	/**
 	 * [SMARTEDITORSUS-677] WYSIWYG 편집 영역 자동 확장 처리 시작
 	 */ 
-	startAutoResize : function(){
-		this.oApp.exec("STOP_CHECKING_BODY_HEIGHT");
-		this.bAutoResize = true;
-		
-		var oBrowser = this.oApp.oNavigator;
-
-		// [SMARTEDITORSUS-887] [블로그 1단] 자동확장 모드에서 에디터 가로사이즈보다 큰 사진을 추가했을 때 가로스크롤이 안생기는 문제
-		if(oBrowser.ie && oBrowser.version < 9){
-			jindo.$Element(this.getDocument().body).css({ "overflow" : "visible" });
-
-			// { "overflowX" : "visible", "overflowY" : "hidden" } 으로 설정하면 세로 스크롤 뿐 아니라 가로 스크롤도 보이지 않는 문제가 있어
-			// { "overflow" : "visible" } 로 처리하고 에디터의 container 사이즈를 늘려 세로 스크롤이 보이지 않도록 처리해야 함
-			// [한계] 자동 확장 모드에서 내용이 늘어날 때 세로 스크롤이 보였다가 없어지는 문제
-		}else{
-			jindo.$Element(this.getDocument().body).css({ "overflowX" : "visible", "overflowY" : "hidden" });
-		}
-				
-		this._setAutoResize();
-		this.nCheckBodyInterval = setInterval(this.fnCheckBodyChange, 500);
-		
-		this.oApp.exec("START_FLOAT_TOOLBAR");	// set scroll event
-	},
+	startAutoResize : function(){},
 	
 	/**
 	 * [SMARTEDITORSUS-677] WYSIWYG 편집 영역 자동 확장 처리 종료
 	 */ 
-	stopAutoResize : function(){
-		this.bAutoResize = false;
-		clearInterval(this.nCheckBodyInterval);
-
-		this.oApp.exec("STOP_FLOAT_TOOLBAR");	// remove scroll event
-		
-		jindo.$Element(this.getDocument().body).css({ "overflow" : "visible", "overflowY" : "visible" });
-		
-		this.oApp.exec("START_CHECKING_BODY_HEIGHT");
-	},
+	stopAutoResize : function(){},
 	
 	/**
 	 * [SMARTEDITORSUS-677] 편집 영역 Body가 변경되었는지 주기적으로 확인
 	 */ 
-	_checkBodyChange : function(){
-		if(!this.bAutoResize){
-			return;
-		}
-		
-		var nBodyLength = this.getDocument().body.innerHTML.length;
-		
-		if(nBodyLength !== this.nBodyLength){
-			this.nBodyLength = nBodyLength;
-			
-			this._setAutoResize();
-		}
-	},
+	_checkBodyChange : function(){},
 	
 	/**
 	 * [SMARTEDITORSUS-677] WYSIWYG 자동 확장 처리
 	 */ 
-	_setAutoResize : function(){		
-		var elBody = this.getDocument().body,
-			welBody = jindo.$Element(elBody),
-			nBodyHeight,
-			nContainerHeight,
-			oCurrentStyle,
-			nStyleSize,
-			bExpand = false,
-			oBrowser = this.oApp.oNavigator;
-		
-		this.nTopBottomMargin = this.nTopBottomMargin || (parseInt(welBody.css("marginTop"), 10) + parseInt(welBody.css("marginBottom"), 10));
-		this.nBodyMinHeight = this.nBodyMinHeight || (this.oApp.getEditingAreaHeight() - this.nTopBottomMargin);
-
-		// 내용이 줄었을 경우, height를 줄여주기 위해 height를 0으로 조정하고 
-		// scrollHeight 를 이용해 내용의 실제 높이값을 구한다.
-		welBody.css("height", "0px");
-		this.iframe.style.height = "0px";
-		nBodyHeight = parseInt(elBody.scrollHeight, 10);
-
-		if(nBodyHeight < this.nBodyMinHeight){	// 최소높이값 지정
-			nBodyHeight = this.nBodyMinHeight;
-		}
-
-		if(oBrowser.ie){
-			// 내용 뒤로 공간이 남아 보일 수 있으나 추가로 Container높이를 더하지 않으면
-			// 내용 가장 뒤에서 Enter를 하는 경우 아래위로 흔들려 보이는 문제가 발생
-			if(nBodyHeight > this.nBodyMinHeight){
-				oCurrentStyle = this.oApp.getCurrentStyle();
-				// [SMARTEDITORSUS-1756]
-				//nStyleSize = parseInt(oCurrentStyle.fontSize, 10) * oCurrentStyle.lineHeight;
-				nStyleSize = this._getStyleSize(oCurrentStyle);
-				// --[SMARTEDITORSUS-1756]
-				
-				if(nStyleSize < this.nTopBottomMargin){
-					nStyleSize = this.nTopBottomMargin;
-				}
-
-				nContainerHeight = nBodyHeight + nStyleSize;
-				nContainerHeight += 18;
-				
-				bExpand = true;
-			}else{
-				nBodyHeight = this.nBodyMinHeight;
-				nContainerHeight = this.nBodyMinHeight + this.nTopBottomMargin;
-			}
-		// }else if(oBrowser.safari){	// -- 사파리에서 내용이 줄어들지 않는 문제가 있어 Firefox 방식으로 변경함
-			// // [Chrome/Safari] 크롬이나 사파리에서는 Body와 iframe높이서 서로 연관되어 늘어나므로,
-			// // nContainerHeight를 추가로 더하는 경우 setTimeout 시 무한 증식되는 문제가 발생할 수 있음
-			// nBodyHeight = nBodyHeight > this.nBodyMinHeight ? nBodyHeight - this.nTopBottomMargin : this.nBodyMinHeight;
-			// nContainerHeight = nBodyHeight + this.nTopBottomMargin;
-		}else{
-			// [FF] nContainerHeight를 추가로 더하였음. setTimeout 시 무한 증식되는 문제가 발생할 수 있음
-			if(nBodyHeight > this.nBodyMinHeight){
-				oCurrentStyle = this.oApp.getCurrentStyle();
-				// [SMARTEDITORSUS-1756]
-				//nStyleSize = parseInt(oCurrentStyle.fontSize, 10) * oCurrentStyle.lineHeight;
-				nStyleSize = this._getStyleSize(oCurrentStyle);
-				// --[SMARTEDITORSUS-1756]
-				
-				if(nStyleSize < this.nTopBottomMargin){
-					nStyleSize = this.nTopBottomMargin;
-				}
-
-				nContainerHeight = nBodyHeight + nStyleSize;
-				
-				bExpand = true;
-			}else{
-				nBodyHeight = this.nBodyMinHeight;
-				nContainerHeight = this.nBodyMinHeight + this.nTopBottomMargin;
-			}
-		}
-		
-		welBody.css("height", nBodyHeight + "px");
-		this.iframe.style.height = nContainerHeight + "px";				// 편집영역 IFRAME의 높이 변경
-		this.oApp.welEditingAreaContainer.height(nContainerHeight);		// 편집영역 IFRAME을 감싸는 DIV 높이 변경
-		
-		// [SMARTEDITORSUS-2036] 자동리사이즈기능으로 편집영역 크기가 변경되면 메시지를 발생시키도록 함
-		if(this._nContainerHeight !== nContainerHeight){
-			this._nContainerHeight = nContainerHeight;
-			this.oApp.exec('MSG_EDITING_AREA_SIZE_CHANGED');
-		}
-
-		//[SMARTEDITORSUS-941][iOS5대응]아이패드의 자동 확장 기능이 동작하지 않을 때 에디터 창보다 긴 내용을 작성하면 에디터를 뚫고 나오는 현상 
-		//원인 : 자동확장 기능이 정지 될 경우 iframe에 스크롤이 생기지 않고, 창을 뚫고 나옴
-		//해결 : 항상 자동확장 기능이 켜져있도록 변경. 자동 확장 기능 관련한 이벤트 코드도 모바일 사파리에서 예외 처리
-		if(!this.oApp.oNavigator.msafari){
-			this.oApp.checkResizeGripPosition(bExpand);
-		}
-	},
+	_setAutoResize : function(){	},
 	
 	// [SMARTEDITORSUS-1756]
 	_getStyleSize : function(oCurrentStyle){
@@ -415,68 +279,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	 * 스크롤 처리를 위해 편집영역 Body의 사이즈를 확인하고 설정함
 	 * 편집영역 자동확장 기능이 Off인 경우에 주기적으로 실행됨
 	 */ 
-	_setBodyHeight : function(){
-		if( this.bStopCheckingBodyHeight ){ // 멈춰야 하는 경우 true, 계속 체크해야 하면 false
-			// 위지윅 모드에서 다른 모드로 변경할 때 "document는 css를 사용 할수 없습니다." 라는 error 가 발생.
-			// 그래서 on_change_mode에서 bStopCheckingBodyHeight 를 true로 변경시켜줘야 함.
-			return;
-		}
-
-		var elBody = this.getDocument().body,
-			welBody = jindo.$Element(elBody),
-			nMarginTopBottom = parseInt(welBody.css("marginTop"), 10) + parseInt(welBody.css("marginBottom"), 10),
-			nContainerOffset = this.oApp.getEditingAreaHeight(),
-			nMinBodyHeight = nContainerOffset - nMarginTopBottom,
-			nBodyHeight = welBody.height(),
-			nScrollHeight,
-			nNewBodyHeight;
-		
-		this.nTopBottomMargin = nMarginTopBottom;
-		
-		if(nBodyHeight === 0){	// [SMARTEDITORSUS-144] height 가 0 이고 내용이 없으면 크롬10 에서 캐럿이 보이지 않음
-			welBody.css("height", nMinBodyHeight + "px");
-
-			setTimeout(this.fnSetBodyHeight, 500);	
-			return;
-		}
-		
-		/**
-		 * [SMARTEDITORSUS-1972] [IE 11] 마지막 변경된 body height에서 변화가 없는 경우 0px로 축소하지 않음
-		 * */
-		var htBrowser = jindo.$Agent().navigator(),
-		isIE11 = (htBrowser.ie && htBrowser.nativeVersion === 11),
-		isShrinkingUnnecessary = (this.nBodyHeight_last === nBodyHeight);
-		
-		if(!(isIE11 && isShrinkingUnnecessary)){
-			welBody.css("height", "0px");
-		}
-		// Previous below	
-		/*welBody.css("height", "0px");*/
-		// --[SMARTEDITORSUS-1972]
-		
-		// [SMARTEDITORSUS-257] IE9, 크롬에서 내용을 삭제해도 스크롤이 남아있는 문제 처리
-		// body 에 내용이 없어져도 scrollHeight 가 줄어들지 않아 height 를 강제로 0 으로 설정
-		
-		nScrollHeight = parseInt(elBody.scrollHeight, 10);
-
-		nNewBodyHeight = (nScrollHeight > nContainerOffset ? nScrollHeight - nMarginTopBottom : nMinBodyHeight);
-		// nMarginTopBottom 을 빼지 않으면 스크롤이 계속 늘어나는 경우가 있음 (참고 [BLOGSUS-17421])
-
-		if(this._isHorizontalScrollbarVisible()){
-			nNewBodyHeight -= this.nScrollbarWidth;
-		}
-		
-		// [SMARTEDITORSUS-1972]
-		if(!(isIE11 && isShrinkingUnnecessary)){
-			welBody.css("height", nNewBodyHeight + "px");
-		}
-		this.nBodyHeight_last = nNewBodyHeight;
-		// Previous below
-		/*welBody.css("height", nNewBodyHeight + "px");*/
-		// --[SMARTEDITORSUS-1972]
-		
-		setTimeout(this.fnSetBodyHeight, 500);
-	},
+	_setBodyHeight : function(){},
 	
 	/**
 	 * 가로 스크롤바 생성 확인
@@ -537,56 +340,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		this._oIERange = this.oApp.getSelection().cloneRange();
 	},
 	
-	$ON_CHANGE_EDITING_MODE : function(sMode/*, bNoFocus*/){
-		if(sMode === this.sMode){
-			// [SMARTEDITORSUS-1213][IE9, 10] 사진 삭제 후 zindex 1000인 div가 잔존하는데, 그 위로 썸네일 drag를 시도하다 보니 drop이 불가능.
-			var htBrowser = jindo.$Agent().navigator();
-			if(htBrowser.ie && htBrowser.nativeVersion > 8){ 
-				var elFirstChild = jindo.$$.getSingle("DIV.container").childNodes[0];
-				if((elFirstChild.tagName == "DIV") && (elFirstChild.style.zIndex == 1000)){
-					elFirstChild.parentNode.removeChild(elFirstChild);
-				}
-			}
-			// --[SMARTEDITORSUS-1213]
-			
-			/**
-			 * [SMARTEDITORSUS-1889] 
-			 * visibility 속성을 사용해서 Editor를 표시하고 숨김
-			 * 단, 에디터 초기화 시 필요한 display:block 설정은 유지
-			 * 
-			 * */
-			this.iframe.style.visibility = "visible";
-			if(this.iframe.style.display != "block"){ // 초기화 시 최초 1회
-				this.iframe.style.display = "block";
-			}
-			// Previous below
-			//this.iframe.style.display = "block";
-			// --[SMARTEDITORSUS-1889]
-			
-			this.oApp.exec("SET_EDITING_WINDOW", [this.getWindow()]);
-			this.oApp.exec("START_CHECKING_BODY_HEIGHT");
-		}else{
-			/**
-			 * [SMARTEDITORSUS-1889] 
-			 * 모드 전환 시 display:none과 display:block을 사용해서
-			 * Editor 영역을 표시하고 숨기는 경우,
-			 * iframe 요소가 그 때마다 다시 로드되는 과정에서
-			 * 스크립트 오류를 유발시킴 (국내지도)
-			 * 
-			 * 따라서 visibility 속성을 대신 사용하고,
-			 * 이 경우 Editor 영역이 공간을 여전히 차지하고 있기 때문에
-			 * 그 아래 위치하게 될 수밖에 없는
-			 * HTML 영역이나 Text 영역은
-			 * position:absolute와 top 속성을 사용하여
-			 * 위로 끌어올리는 방법을 사용
-			 * */
-			this.iframe.style.visibility = "hidden";
-			// previous below
-			//this.iframe.style.display = "none";
-			// --[SMARTEDITORSUS-1889]
-			this.oApp.exec("STOP_CHECKING_BODY_HEIGHT");
-		}
-	},
+	$ON_CHANGE_EDITING_MODE : function(sMode/*, bNoFocus*/){},
 
 	$AFTER_CHANGE_EDITING_MODE : function(/*sMode, bNoFocus*/){
 		this._oIERange = null;
@@ -600,32 +354,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		this._disableWYSIWYG();
 	},
 	
-	$ON_IE_HIDE_CURSOR : function(){
-		if(!this._bIECursorHide){
-			return;
-		}
-
-		this._onIEBeforeDeactivate();
-
-		// De-select the default selection.
-		// [SMARTEDITORSUS-978] IE9에서 removeAllRanges로 제거되지 않아
-		// 이전 IE와 동일하게 empty 방식을 사용하도록 하였으나 doc.selection.type이 None인 경우 에러
-		// Range를 재설정 해주어 selectNone 으로 처리되도록 예외처리
-		var oSelection = this.oApp.getCanvasDocument().selection;
-		if(oSelection && oSelection.createRange){
-			try{
-				oSelection.empty();
-			}catch(e){
-				// [SMARTEDITORSUS-1003] IE9 / doc.selection.type === "None"
-				oSelection = this.oApp.getSelection();
-				oSelection.select();
-				oSelection.oBrowserSelection.selectNone();
-			}
-		}else{
-			this.oApp.getEmptySelection().oBrowserSelection.selectNone();
-			this.getDocument().body.blur();	// [SMARTEDITORSUS-2149] win10_edge 에서 커서가 보이지 않도록 하려면 blur 해줘야 한다.
-		}
-	},
+	$ON_IE_HIDE_CURSOR : function(){},
 	
 	$AFTER_SHOW_ACTIVE_LAYER : function(){
 		this.oApp.exec("IE_HIDE_CURSOR");
@@ -833,134 +562,30 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	 * @param {Boolean}		htOption.bBlock		HTML 삽입시 강제로 block 요소 처리할지 여부(true 이면 P태그 안에 삽입될 경우, P태그를 무조건 쪼개고 그 사이에 DIV태그로 감싸서 삽입한다.)
 	 */
 	$ON_PASTE_HTML : function(sHTML, oPSelection, htOption){
-		htOption = htOption || {};
-		var oSelection, oNavigator, sTmpBookmark, 
-			oStartContainer, aImgChild, elLastImg, elChild, elNextChild;
+		//console.log("$ON_PASTE_HTML is called...");
+		//var oSelection;
+		//oSelection = oPSelection || this.oApp.getSelection();
+		//oSelection.pasteHTML(sHTML, htOption.bBlock);
 
-		if(this.oApp.getEditingMode() !== this.sMode){
-			return;
-		}
-		
-		// [SMARTEDITORSUS-2023] 편집영역에 포커스가 없는 상태에서 PASTE_HTML 을 수행하면 
-		// <p>태그 바깥쪽으로 삽입되기 때문에 pasteHTML 전에 포커스를 준다. 
-		this.focus();
-		
-		if(!htOption.bNoUndo){
-			this.oApp.exec("RECORD_UNDO_BEFORE_ACTION", ["PASTE HTML"]);
-		}
-
-		oNavigator = jindo.$Agent().navigator();
-		oSelection = oPSelection || this.oApp.getSelection();
-
-		//[SMARTEDITORSUS-888] 브라우저 별 테스트 후 아래 부분이 불필요하여 제거함
-		//	- [SMARTEDITORSUS-387] IE9 표준모드에서 엘리먼트 뒤에 어떠한 엘리먼트도 없는 상태에서 커서가 안들어가는 현상.
-		// if(oNavigator.ie && oNavigator.nativeVersion >= 9 && document.documentMode >= 9){
-		//		sHTML = sHTML + unescape("%uFEFF");
-		// }
-		//[SMARTEDITORSUS-2043] IE8의 경우 FEFF 로 인해 한줄 내려가는 현상이 생겨서 아래 부분 제거함 
-		//if(oNavigator.ie && oNavigator.nativeVersion == 8 && document.documentMode == 8){
-		//	sHTML = sHTML + unescape("%uFEFF");
-		//}
-
-		oSelection.pasteHTML(sHTML, htOption.bBlock);
-		
-		// every browser except for IE may modify the innerHTML when it is inserted
-		if(!oNavigator.ie){
-			sTmpBookmark = oSelection.placeStringBookmark();
-			this.oApp.getCanvasDocument().body.innerHTML = this.oApp.getCanvasDocument().body.innerHTML;
-			oSelection.moveToBookmark(sTmpBookmark);
-			oSelection.collapseToEnd();
-			oSelection.select();
-			oSelection.removeStringBookmark(sTmpBookmark);
-			// [SMARTEDITORSUS-56] 사진을 연속으로 첨부할 경우 연이어 삽입되지 않는 현상으로 이슈를 발견하게 되었습니다.
-			// 그러나 이는 비단 '다수의 사진을 첨부할 경우'에만 발생하는 문제는 아니었고, 
-			// 원인 확인 결과 컨텐츠 삽입 후 기존 Bookmark 삭제 시 갱신된 Selection 이 제대로 반영되지 않는 점이 있었습니다.
-			// 이에, Selection 을 갱신하는 코드를 추가하였습니다.
-			oSelection = this.oApp.getSelection();
-			
-			//[SMARTEDITORSUS-831] 비IE 계열 브라우저에서 스크롤바가 생기게 문자입력 후 엔터 클릭하지 않은 상태에서 
-			//이미지 하나 삽입 시 이미지에 포커싱이 놓이지 않습니다.
-			//원인 : parameter로 넘겨 받은 oPSelecion에 변경된 값을 복사해 주지 않아서 발생
-			//해결 : parameter로 넘겨 받은 oPSelecion에 변경된 값을 복사해준다
-			//       call by reference로 넘겨 받았으므로 직접 객체 안의 인자 값을 바꿔주는 setRange 함수 사용
-			if(oPSelection){
-				oPSelection.setRange(oSelection);
-			}
-		}else{
-			// [SMARTEDITORSUS-428] [IE9.0] IE9에서 포스트 쓰기에 접근하여 맨위에 임의의 글감 첨부 후 엔터를 클릭 시 글감이 사라짐
-			// PASTE_HTML 후에 IFRAME 부분이 선택된 상태여서 Enter 시 내용이 제거되어 발생한 문제
-			oSelection.collapseToEnd();
-			oSelection.select();
-			
-			this._oIERange = null;
-			this._bIERangeReset = false;
-		}
-		
-		// [SMARTEDITORSUS-639] 사진 첨부 후 이미지 뒤의 공백으로 인해 스크롤이 생기는 문제
-		if(sHTML.indexOf("<img") > -1){
-			oStartContainer = oSelection.startContainer;
-				
-			if(oStartContainer.nodeType === 1 && oStartContainer.tagName === "P"){
-				aImgChild = jindo.$Element(oStartContainer).child(function(v){  
-					return (v.$value().nodeType === 1 && v.$value().tagName === "IMG");
-				}, 1);
-				
-				if(aImgChild.length > 0){
-					elLastImg = aImgChild[aImgChild.length - 1].$value();
-					elChild = elLastImg.nextSibling;
-					
-					while(elChild){
-						elNextChild = elChild.nextSibling;
-						
-						if (elChild.nodeType === 3 && (elChild.nodeValue === "&nbsp;" || elChild.nodeValue === unescape("%u00A0"))) {
-							oStartContainer.removeChild(elChild);
-						}
-					
-						elChild = elNextChild;
-					}
-				}
-			}
-		}
-
-		if(!htOption.bNoUndo){
-			this.oApp.exec("RECORD_UNDO_AFTER_ACTION", ["PASTE HTML"]);
-		}
+		//console.log("sHTML = " + sHTML);
+		var runs = carota.html.parse(sHTML, {
+			//carota: { color: 'orange', bold: true, size: 14 }
+		});
+		this.elEditor.load(runs);
 	},
 
 	/**
+	 * [SMARTEDITORSUS-677] 붙여넣기나 내용 입력에 대한 편집영역 자동 확장 처리
+	 */
+	$AFTER_PASTE_HTML : function(){
+		if(!this.bAutoResize)
+			return;
+		this._setAutoResize();
+	},
+	/**
 	 * [SMARTEDITORSUS-344]사진/동영상/지도 연속첨부시 포커싱 개선이슈로 추가되 함수.
 	 */
-	$ON_FOCUS_N_CURSOR : function (bEndCursor, sId){
-		var el, oSelection;
-		if(sId && ( el = jindo.$(sId, this.getDocument()) )){
-			// ID가 지정된 경우, 무조건 해당 부분으로 커서 이동
-			clearTimeout(this._nTimerFocus);	// 연속 삽입될 경우, 미완료 타이머는 취소한다.
-			this._nTimerFocus = setTimeout(jindo.$Fn(function(el){
-				this._scrollIntoView(el);
-				this.oApp.exec("FOCUS");
-			}, this).bind(el), 300);
-			return;
-		}
-
-		oSelection = this.oApp.getSelection();
-		if(!oSelection.collapsed){ // select 영역이 있는 경우
-			if(bEndCursor){
-				oSelection.collapseToEnd();
-			} else {
-				oSelection.collapseToStart();
-			}
-			oSelection.select();
-		}else if(bEndCursor){ // select 영역이 없는 상태에서 bEndCursor 이면 body 맨 뒤로 이동시킨다.
-			this.oApp.exec("FOCUS");
-			el = this.getDocument().body;
-			oSelection.selectNode(el);
-			oSelection.collapseToEnd();
-			oSelection.select();
-			this._scrollIntoView(el);
-		}else{	// select 영역이 없는 상태라면 focus만 준다.
-			this.oApp.exec("FOCUS");
-		}			
-	},
+	$ON_FOCUS_N_CURSOR : function (bEndCursor, sId){},
 	
 	/* 
 	 * 엘리먼트의 top, bottom 값을 반환
@@ -1089,35 +714,11 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	},
 	
 	// [SMARTEDITORSUS-855] IE에서 특정 블로그 글을 복사하여 붙여넣기 했을 때 개행이 제거되는 문제
-	_replaceBlankToNbsp : function(el){
-		var oNavigator = this.oApp.oNavigator;
-		
-		if(!oNavigator.ie){
-			return;
-		}
-		
-		if(oNavigator.nativeVersion !== 9 || document.documentMode !== 7) { // IE9 호환모드에서만 발생
-			return;
-		}
-
-		if(el.nodeType !== 1){
-			return;
-		}
-		
-		if(el.tagName === "BR"){
-			return;
-		}
-		
-		var aEl = jindo.$$("p:empty()", this.oApp.getCanvasDocument().body, { oneTimeOffCache:true });
-		
-		jindo.$A(aEl).forEach(function(value) {
-			value.innerHTML = "&nbsp;";
-		});
-	},
+	_replaceBlankToNbsp : function(el){},
 	
 	_pageUp : function(we){
 		var nEditorHeight = this._getEditorHeight(),
-			htPos = jindo.$Document(this.oApp.getCanvasDocument()).scrollPosition(),
+			htPos = jindo.$Document(this.oApp.getDocument()).scrollPosition(),
 			nNewTop;
 
 		if(htPos.top <= nEditorHeight){
@@ -1125,13 +726,13 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		}else{
 			nNewTop = htPos.top - nEditorHeight;
 		}
-		this.oApp.getCanvasWindow().scrollTo(0, nNewTop);
+		this.oApp.getWindow().scrollTo(0, nNewTop);
 		we.stop();
 	},
 	
 	_pageDown : function(we){
 		var nEditorHeight = this._getEditorHeight(),
-			htPos = jindo.$Document(this.oApp.getCanvasDocument()).scrollPosition(),
+			htPos = jindo.$Document(this.oApp.getDocument()).scrollPosition(),
 			nBodyHeight = this._getBodyHeight(),
 			nNewTop;
 
@@ -1140,7 +741,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		}else{
 			nNewTop = htPos.top + nEditorHeight;
 		}
-		this.oApp.getCanvasWindow().scrollTo(0, nNewTop);
+		this.oApp.getWindow().scrollTo(0, nNewTop);
 		we.stop();
 	},
 	
@@ -1152,69 +753,14 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		return parseInt(this.getDocument().body.scrollHeight, 10);
 	},
 	
-	initIframe : function(){
-		try {
-			if (!this.iframe.contentWindow.document || !this.iframe.contentWindow.document.body || this.iframe.contentWindow.document.location.href === 'about:blank'){
-				throw new Error('Access denied');
-			}
-
-			var sCSSBaseURI = (!!nhn.husky.SE2M_Configuration.SE2M_CSSLoader && nhn.husky.SE2M_Configuration.SE2M_CSSLoader.sCSSBaseURI) ? 
-					nhn.husky.SE2M_Configuration.SE2M_CSSLoader.sCSSBaseURI : "";
-
-			if(nhn.husky.SE2M_Configuration.SE_EditingAreaManager.sCSSBaseURI){
-				sCSSBaseURI = nhn.husky.SE2M_Configuration.SE_EditingAreaManager.sCSSBaseURI;
-			}
-
-			// add link tag
-			if (sCSSBaseURI){
-				var sCssUrl = sCSSBaseURI;
-				var sLocale = this.oApp && this.oApp.htOptions.I18N_LOCALE;
-				if(sLocale){
-					sCssUrl += "/" + sLocale;
-				}
-				sCssUrl += "/smart_editor2_in.css";
-
-				var doc = this.getDocument();
-				var headNode = doc.getElementsByTagName("head")[0];
-				var linkNode = doc.createElement('link');
-				linkNode.type = 'text/css';
-				linkNode.rel = 'stylesheet';
-				linkNode.href = sCssUrl;
-				linkNode.onload = jindo.$Fn(function(){
-					// [SMARTEDITORSUS-1853] IE의 경우 css가 로드되어 반영되는데 시간이 걸려서 브라우저 기본폰트가 세팅되는 경우가 있음
-					// 때문에 css가 로드되면 SE_WYSIWYGStylerGetter 플러그인의 스타일정보를 RESET 해준다.
-					// 주의: 크롬의 경우, css 로딩이 더 먼저 발생해서 SE_WYSIWYGStylerGetter 플러그인에서 오류가 발생할 수 있기 때문에 RESET_STYLE_STATUS 메시지 호출이 가능한 상태인지 체크함
-					if(this.oApp && this.oApp.getEditingMode && this.oApp.getEditingMode() === this.sMode){
-						this.oApp.exec("RESET_STYLE_STATUS");
-					}
-					/*
-					 * [SMARTEDITORSUS-2298]
-					 * IE에서 웹폰트용 css가 import될때 이벤트핸들러가 실행되어 툴바에 선택된 폰트가 리셋되는 문제가 있음
-					 * 때문에 한번 실행되고 난 후에는 연결된 이벤트핸들러를 클리어처리함
-					 */
-					linkNode.onload = null;
-				}, this).bind();
-				headNode.appendChild(linkNode);
-			}
-			
-			this._enableWYSIWYG();
-
-			this.status = nhn.husky.PLUGIN_STATUS.READY;
-		} catch(e) {
-			if(this._nIFrameReadyCount-- > 0){
-				setTimeout(jindo.$Fn(this.initIframe, this).bind(), 100);
-			}else{
-				throw("iframe for WYSIWYG editing mode can't be initialized. Please check if the iframe document exists and is also accessable(cross-domain issues). ");
-			}
-		}
-	},
+	initIframe : function(){},
 
 	getIR : function(){
 		var sContent = this.iframe.contentWindow.document.body.innerHTML,
 			sIR;
 
 		if(this.oApp.applyConverter){
-			sIR = this.oApp.applyConverter(this.sMode+"_TO_IR", sContent, this.oApp.getCanvasDocument());
+			sIR = this.oApp.applyConverter(this.sMode+"_TO_IR", sContent, this.oApp.getDocument());
 		}else{
 			sIR = sContent;
 		}
@@ -1234,7 +780,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 			sCursorHolder = bUnderIE11 ? "" : "<br>";
 
 		if(this.oApp.applyConverter){
-			sContent = this.oApp.applyConverter("IR_TO_"+this.sMode, sIR, this.oApp.getCanvasDocument());
+			sContent = this.oApp.applyConverter("IR_TO_"+this.sMode, sIR, this.oApp.getDocument());
 		}else{
 			sContent = sIR;
 		}
@@ -1252,12 +798,14 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 			}
 			sContent = sCursorHolder;
 		}
-		this.iframe.contentWindow.document.body.innerHTML = sContent;
+
+		// TODO: 
+		//this.iframe.contentWindow.document.body.innerHTML = sContent;
 
 		// [COM-1142] IE의 경우 <p>&nbsp;</p> 를 <p></p> 로 변환
 		// [SMARTEDITORSUS-1623] IE11은 <p></p>로 변환하면 라인이 붙어버리기 때문에 IE10만 적용하도록 수정
 		if(bUnderIE11 && this.oApp.getEditingMode() === this.sMode){
-			var pNodes = this.oApp.getCanvasDocument().body.getElementsByTagName("P");
+			var pNodes = this.oApp.getDocument().body.getElementsByTagName("P");
 
 			for(var i=0, nMax = pNodes.length; i < nMax; i++){
 				if(pNodes[i].childNodes.length === 1 && pNodes[i].innerHTML === "&nbsp;"){
@@ -1268,7 +816,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	},
 
 	getRawContents : function(){
-		return this.iframe.contentWindow.document.body.innerHTML;
+		//return this.iframe.contentWindow.document.body.innerHTML;
 	},
 
 	getRawHTMLContents : function(){
@@ -1276,17 +824,27 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	},
 
 	setRawHTMLContents : function(sContents){
-		this.iframe.contentWindow.document.body.innerHTML = sContents;
+		//this.iframe.contentWindow.document.body.innerHTML = sContents;
+		var runs = carota.html.parse(sContents, {});
+		this.elEditor.load(runs);
 	},
 
 	getWindow : function(){
-		return this.iframe.contentWindow;
+		return window;
 	},
 
 	getDocument : function(){
-		return this.iframe.contentWindow.document;
+		return document;
 	},
 	
+	getEditArea : function(){
+		return this.elEditArea;
+	},
+
+	getEditor : function() {
+		return this.elEditor;
+	},
+
 	focus : function(){
 		//this.getWindow().focus();
 		this.getDocument().body.focus();
