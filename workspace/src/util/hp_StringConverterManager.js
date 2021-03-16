@@ -53,7 +53,7 @@ nhn.husky.StringConverterManager = jindo.$Class({
 		sContents = oRes.sContents;
 		aConverters = this.oConverters_DOM[sRuleName];
 		if(aConverters){
-			var elContentsHolder = oDocument.createElement("DIV");
+			var elContentsHolder = oDocument.createElement("div");
 			elContentsHolder.innerHTML = sContents;
 			
 			for(var i=0; i<aConverters.length; i++){

@@ -50,7 +50,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 			this.$ON_EVENT_EDITING_AREA_MOUSEUP = function(){};
 			this._recordUndo = function(){};
 		}
-				
+		
 		// uncomment this line if you wish to use the IE-style cursor in FF
 		// this.getDocument().body.style.cursor = "text";
 

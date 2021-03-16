@@ -22,8 +22,8 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	}
 
 	var elAppContainer = (elSeAppContainer || jindo.$("smart_editor2"));	
-	var elContainer = jindo.$$.getSingle("DIV.container", elAppContainer);
-	//var oCanvasIFrame = jindo.$$.getSingle("IFRAME.se2_input_canvas", elContainer);
+	var elContainer = jindo.$$.getSingle("div.container", elAppContainer);
+	//var oCanvasIFrame = jindo.$$.getSingle("iframe.se2_input_canvas", elContainer);
 	var elDocument = jindo.$$.getSingle("div#document", elContainer);
 	//console.log("elDocument = " + elDocument);
 
@@ -57,10 +57,10 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	}
 
 	var htDimension = {
-		nMinHeight:205,
-		nMinWidth:parseInt(elIRField.style.minWidth, 10)||570,
-		nHeight:elIRField.style.height||elIRField.offsetHeight,
-		nWidth:elIRField.style.width||elIRField.offsetWidth
+		nMinHeight: 205,
+		nMinWidth: parseInt(elIRField.style.minWidth, 10) || 570,
+		nHeight: elIRField.style.height || elIRField.offsetHeight,
+		nWidth: elIRField.style.width || elIRField.offsetWidth,
 	};
 	
 	var htConversionMode = {
@@ -114,7 +114,7 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	if(nhn.husky.SE2M_AttachQuickPhoto){
 		oEditor.registerPlugin(new nhn.husky.SE2M_AttachQuickPhoto(elAppContainer));			// 사진			
 	}
-
+	
 	oEditor.registerPlugin(new nhn.husky.MessageManager(oMessageMap, htParams.I18N_LOCALE));
 	oEditor.registerPlugin(new nhn.husky.SE2M_QuickEditor_Common(elAppContainer));			// 퀵에디터 공통(표, 이미지)
 	
