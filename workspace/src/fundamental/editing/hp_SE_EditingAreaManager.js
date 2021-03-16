@@ -115,6 +115,18 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	bIsDirty : false,
 	bAutoResize : false, // [SMARTEDITORSUS-677] 에디터의 자동확장 기능 On/Off 여부
 	
+	_assignHTMLElements : function(elAppContainer){
+		this.elContainer = jindo.$$.getSingle("div.container", elAppContainer);
+		//console.log("this.elContainer = " + this.elContainer);
+		// [SMARTEDITORSUS-2036] 로딩 레이어는 하위 호환을 위해 마크업이 존재하는 경우만 동작하도록 한다.
+		var f = function(){};
+		this.elLoadingLayer = jindo.$$.getSingle(".se2_content_loading", elAppContainer);
+		if(!this.elLoadingLayer){
+			this.$ON_SHOW_LOADING_LAYER = f;
+			this.$ON_HIDE_LOADING_LAYER = f;
+		}
+	},
+
 	$init : function(sDefaultEditingMode, elContentsField, oDimension, fOnBeforeUnload, elAppContainer){
 		this.sDefaultEditingMode = sDefaultEditingMode;
 		this.elContentsField = jindo.$(elContentsField);
@@ -187,18 +199,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		
 		return {nSize : nSize, sUnit : sUnit};
 	},
-
-	_assignHTMLElements : function(elAppContainer){
-		this.elContainer = jindo.$$.getSingle("DIV.container", elAppContainer);
-
-		// [SMARTEDITORSUS-2036] 로딩 레이어는 하위 호환을 위해 마크업이 존재하는 경우만 동작하도록 한다.
-		var f = function(){};
-		this.elLoadingLayer = jindo.$$.getSingle(".se2_content_loading", elAppContainer);
-		if(!this.elLoadingLayer){
-			this.$ON_SHOW_LOADING_LAYER = f;
-			this.$ON_HIDE_LOADING_LAYER = f;
-		}
-	},
+	
 
 	$BEFORE_MSG_APP_READY : function(/*msg*/){
 		this.oApp.exec("ADD_APP_PROPERTY", ["version", nhn.husky.SE_EditingAreaManager.version]);
@@ -607,7 +608,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		var sContents;
 
 		if(this.oApp.applyConverter){
-			sContents = this.oApp.applyConverter("IR_TO_DB", sIR, this.oApp.getCanvasDocument());
+			sContents = this.oApp.applyConverter("IR_TO_DB", sIR, this.oApp.getDocument());
 		}else{
 			sContents = sIR;
 		}
@@ -635,7 +636,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	 * 
 	 */
 	_convertLastBrToNbsp : function(){
-		var elBody = this.oApp.getCanvasDocument().body,
+		var elBody = this.oApp.getDocument().body,
 		aBr, elBr,
 		elBrContainer, elImgContainer, elNextToImgContainer, elUndesiredContainer,
 		aImg, elImg, nImgWidth,
