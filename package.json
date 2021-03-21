@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://"
   },
-  "license": "LGPL-2.1",
+  "license": "LGPL-2.1+MIT",
   "author": {
     "name": "Home.",
     "email": "zamong99@gmail.com"

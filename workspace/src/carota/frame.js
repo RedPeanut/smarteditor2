@@ -66,14 +66,18 @@ exports = module.exports = function(left, top, width, ordinal, parent,
     var wrapper = wrap(left, top, width, ordinal, frame, includeTerminator, initialAscent, initialDescent);
     var length = 0, height = 0;
     return function(emit, word) {
-        if (wrapper(function(line) {
-            if (typeof line === 'number') {
-                height = line;
-            } else {
-                length = (line.ordinal + line.length) - ordinal;
-                lines.push(line);
-            }
-        }, word)) {
+        if (
+            wrapper(
+                function(line) {
+                    if (typeof line === 'number') {
+                        height = line;
+                    } else {
+                        length = (line.ordinal + line.length) - ordinal;
+                        lines.push(line);
+                    }
+                }, word
+            )
+        ) {
             Object.defineProperty(frame, 'length', { value: length });
             Object.defineProperty(frame, 'height', { value: height });
             emit(frame);

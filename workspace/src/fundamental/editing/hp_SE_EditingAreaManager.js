@@ -59,7 +59,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 /*[
  * REGISTER_EDITING_AREA
  *
- * 편집 영역을 플러그인을 등록 시킨다. 원활한 모드 전환과 IR값 공유등를 위해서 초기화 시에 등록이 필요하다. 
+ * 편집 영역 플러그인을 등록 시킨다. 원활한 모드 전환과 IR값 공유등를 위해서 초기화 시에 등록이 필요하다. 
  *
  * oEditingAreaPlugin object 편집 영역 플러그인 인스턴스
  *
@@ -115,22 +115,10 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	bIsDirty : false,
 	bAutoResize : false, // [SMARTEDITORSUS-677] 에디터의 자동확장 기능 On/Off 여부
 	
-	_assignHTMLElements : function(elAppContainer){
-		this.elEditingAreaContainer = jindo.$$.getSingle("div.editing_area_container", elAppContainer);
-		//console.log("this.elContainer = " + this.elContainer);
-		// [SMARTEDITORSUS-2036] 로딩 레이어는 하위 호환을 위해 마크업이 존재하는 경우만 동작하도록 한다.
-		var f = function(){};
-		this.elLoadingLayer = jindo.$$.getSingle(".se2_content_loading", elAppContainer);
-		if(!this.elLoadingLayer){
-			this.$ON_SHOW_LOADING_LAYER = f;
-			this.$ON_HIDE_LOADING_LAYER = f;
-		}
-	},
-
 	$init : function(sDefaultEditingMode, elContentsField, oDimension, fOnBeforeUnload, elAppContainer){
 		this.sDefaultEditingMode = sDefaultEditingMode;
 		this.elContentsField = jindo.$(elContentsField);
-		this._assignHTMLElements(elAppContainer);
+		this.elEditingAreaContainer = jindo.$$.getSingle("div.editing_area_container", elAppContainer);
 		this.fOnBeforeUnload = fOnBeforeUnload;
 		
 		this.oEditingMode = {};
@@ -213,6 +201,8 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		this.oApp.exec("ADD_APP_PROPERTY", ["setContents", this.setContents]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["setIR", this.setIR]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["getEditingMode", jindo.$Fn(this.getEditingMode, this).bind()]);
+		this.oApp.exec("ADD_APP_PROPERTY", ["getWindow", jindo.$Fn(this.getWindow, this).bind()]);
+		this.oApp.exec("ADD_APP_PROPERTY", ["getDocument", jindo.$Fn(this.getDocument, this).bind()]);
 	},
 
 	$ON_MSG_APP_READY : function(){
@@ -812,5 +802,13 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	
 	getEditingAreaHeight : function(){
 		return this.elEditingAreaContainer.offsetHeight;
-	}
+	},
+
+	getWindow : function(){
+		return window;
+	},
+
+	getDocument : function(){
+		return document;
+	},
 });

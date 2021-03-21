@@ -20,14 +20,14 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	
 	_nIFrameReadyCount : 50,
 	
-	bWYSIWYGEnabled : false,
+	//bWYSIWYGEnabled : false,
 	
 	$init : function(elAppContainer){
-		var elContainer = jindo.$$.getSingle("div.editing_area_container", elAppContainer);
-		this.elDocument = jindo.$$.getSingle("div.document", elAppContainer);
+		//var elContainer = jindo.$$.getSingle("div.editing_area_container", elAppContainer);
+		//this.elDocument = jindo.$$.getSingle("div.document", elAppContainer);
 		this.htOptions = nhn.husky.SE2M_Configuration.SE_EditingAreaManager;
-		this.elEditingArea = jindo.$$.getSingle("div.editing_area", this.elDocument);
-		this.elEditor = carota.editor.create(this.elEditingArea);
+		this.elEditingArea = jindo.$$.getSingle("div.editing_area", elAppContainer);
+		//this.elEditor = carota.editor.create(this.elEditingArea);
 		
 		var fHandlerSuccess, fHandlerFail;
 		this.status = nhn.husky.PLUGIN_STATUS.READY;
@@ -38,13 +38,13 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		this.oApp.exec("REGISTER_EDITING_AREA", [this]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["getWindow", jindo.$Fn(this.getWindow, this).bind()]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["getDocument", jindo.$Fn(this.getDocument, this).bind()]);
-		this.oApp.exec("ADD_APP_PROPERTY", ["isCanvasEnabled", jindo.$Fn(this.isWYSIWYGEnabled, this).bind()]);
+		//this.oApp.exec("ADD_APP_PROPERTY", ["isCanvasEnabled", jindo.$Fn(this.isCanvasEnabled, this).bind()]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["getRawHTMLContents", jindo.$Fn(this.getRawHTMLContents, this).bind()]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["setRawHTMLContents", jindo.$Fn(this.setRawHTMLContents, this).bind()]);
 		
-		if (this.isWYSIWYGEnabled()) {
+		/* if (this.isWYSIWYGEnabled()) {
 			this.oApp.exec('ENABLE_WYSIWYG_RULER');
-		}
+		} */
 		
 		this.oApp.registerBrowserEvent(this.getDocument(), 'paste', 'EVENT_EDITING_AREA_PASTE');
 		this.oApp.registerBrowserEvent(this.getDocument(), 'drop', 'EVENT_EDITING_AREA_DROP');
@@ -346,13 +346,13 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		this._oIERange = null;
 	},
 
-	$ON_ENABLE_WYSIWYG : function(){
+	/* $ON_ENABLE_WYSIWYG : function(){
 		this._enableWYSIWYG();
 	},
 
 	$ON_DISABLE_WYSIWYG : function(){
 		this._disableWYSIWYG();
-	},
+	}, */
 	
 	$ON_IE_HIDE_CURSOR : function(){},
 	
@@ -568,10 +568,10 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		//oSelection.pasteHTML(sHTML, htOption.bBlock);
 
 		//console.log("sHTML = " + sHTML);
-		var runs = carota.html.parse(sHTML, {
+		/* var runs = carota.html.parse(sHTML, {
 			//carota: { color: 'orange', bold: true, size: 14 }
 		});
-		this.elEditor.load(runs);
+		this.elEditor.load(runs); */
 	},
 
 	/**
@@ -582,6 +582,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 			return;
 		this._setAutoResize();
 	},
+	
 	/**
 	 * [SMARTEDITORSUS-344]사진/동영상/지도 연속첨부시 포커싱 개선이슈로 추가되 함수.
 	 */
@@ -885,7 +886,7 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 		this.oApp.exec("RECORD_UNDO_ACTION", ["KEYPRESS(" + oKeyInfo.keyCode + ")", {bMustBlockContainer:true}]);
 	},
 	
-	_enableWYSIWYG : function(){
+	/* _enableWYSIWYG : function(){
 		//if (this.iframe.contentWindow.document.body.hasOwnProperty("contentEditable")){
 		if (this.iframe.contentWindow.document.body.contentEditable !== null) {
 			this.iframe.contentWindow.document.body.contentEditable = true;
@@ -914,6 +915,6 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	
 	isWYSIWYGEnabled : function(){
 		return this.bWYSIWYGEnabled;
-	}
+	} */
 });
 //}
