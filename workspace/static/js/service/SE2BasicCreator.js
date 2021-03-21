@@ -28,8 +28,8 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	//console.log("elDocument = " + elDocument);
 
 	var oIRTextarea = elIRField?elIRField:jindo.$$.getSingle("textarea.blind", elContainer);
-	var oHTMLSrc = jindo.$$.getSingle("TEXTAREA.se2_input_htmlsrc", elContainer);
-	var oTextArea = jindo.$$.getSingle("TEXTAREA.se2_input_text", elContainer);
+	//var oHTMLSrc = jindo.$$.getSingle("TEXTAREA.se2_input_htmlsrc", elContainer);
+	//var oTextArea = jindo.$$.getSingle("TEXTAREA.se2_input_text", elContainer);
 	
 	if(!htParams){ 
 		htParams = {}; 

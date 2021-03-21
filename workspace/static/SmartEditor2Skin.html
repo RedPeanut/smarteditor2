@@ -10,6 +10,7 @@
 </style>
 <script type="text/javascript" src="./js/lib/jindo2.all.js" charset="utf-8"></script>
 <script type="text/javascript" src="./js/lib/jindo_component.js" charset="utf-8"></script>
+<!-- TODO: <script type="text/javascript" src="./js/lib/jquery-3.6.0.js" charset="utf-8"></script> -->
 <script type="text/javascript" src="./js/service/SE2M_Configuration.js" charset="utf-8"></script>	<!-- 설정 파일 -->
 <script type="text/javascript" src="./js/service/SE2BasicCreator.js" charset="utf-8"></script>
 <script type="text/javascript" src="./js/webhwp.js" charset="utf-8"></script>
@@ -658,9 +659,14 @@ window.onload = function() {
 				</div>
 				<div class="editing_area">
 					<textarea class="blind" name="" id="persistence"></textarea>
-					<canvas id="PaperCanvas"></canvas>
-					<canvas id="EditCanvas"></canvas>
-					<div id="CURSOR" class=""></div>
+					<canvas id="paperCanvas" style="position:absolute;"></canvas>
+					<canvas id="editCanvas" style="position:absolute;background:white;width:100%;height:100%;"></canvas>
+					<div id="cursor" class=""></div>
+					<textarea name="" id="" autocorrect="off" autocapitalize="off" spellcheck="false" style="position:absolute;padding:0px;width:100%;height:1em;outline:none;font-size:4px;"></textarea>
+					<div id="scrollView" style="position:absolute;overflow:auto;width:100%;height:100%;">
+						<div id="scrollViewHorizontal" style="position:absolute;width:100%;height:1px;"></div>
+						<div id="scrollViewVertical" style="position:absolute;width:1px;height:100%;"></div>
+					</div>
 				</div>
 			</div>
 
