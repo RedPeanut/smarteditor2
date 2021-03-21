@@ -39,7 +39,7 @@
     "name": "Home.",
     "email": "zamong99@gmail.com"
   },
-  "main": "dist/js/smarteditor2.js",
+  "main": "dist/js/webhwp.js",
   "files": [
     "dist"
   ],

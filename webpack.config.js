@@ -17,7 +17,7 @@ module.exports = (env = {}) => {
             //'bundle/extra': './workspace/src/bundle/extra.js',
             //'bundle/lazy': './workspace/src/bundle/lazy.js',
             //'bundle/index': './workspace/src/bundle/index.js',
-            'smarteditor2': './workspace/src/bundle/index.js'
+            'webhwp': './workspace/src/bundle/index.js'
         },
         output: {
             filename: 'js/[name].js',
