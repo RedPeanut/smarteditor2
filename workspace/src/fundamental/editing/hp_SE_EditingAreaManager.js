@@ -116,7 +116,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	bAutoResize : false, // [SMARTEDITORSUS-677] 에디터의 자동확장 기능 On/Off 여부
 	
 	_assignHTMLElements : function(elAppContainer){
-		this.elContainer = jindo.$$.getSingle("div.container", elAppContainer);
+		this.elEditingAreaContainer = jindo.$$.getSingle("div.editing_area_container", elAppContainer);
 		//console.log("this.elContainer = " + this.elContainer);
 		// [SMARTEDITORSUS-2036] 로딩 레이어는 하위 호환을 위해 마크업이 존재하는 경우만 동작하도록 한다.
 		var f = function(){};
@@ -140,11 +140,11 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		this.nMinWidth = parseInt((oDimension.nMinWidth || 60), 10);
 		this.nMinHeight = parseInt((oDimension.nMinHeight || 60), 10);
 		
-		var oWidth = this._getSize([oDimension.nWidth, oDimension.width, this.elContainer.offsetWidth], this.nMinWidth);
-		var oHeight = this._getSize([oDimension.nHeight, oDimension.height, this.elContainer.offsetHeight], this.nMinHeight);
+		var oWidth = this._getSize([oDimension.nWidth, oDimension.width, this.elEditingAreaContainer.offsetWidth], this.nMinWidth);
+		var oHeight = this._getSize([oDimension.nHeight, oDimension.height, this.elEditingAreaContainer.offsetHeight], this.nMinHeight);
 
-		this.elContainer.style.width = oWidth.nSize + oWidth.sUnit;
-		this.elContainer.style.height = oHeight.nSize + oHeight.sUnit;
+		this.elEditingAreaContainer.style.width = oWidth.nSize + oWidth.sUnit;
+		this.elEditingAreaContainer.style.height = oHeight.nSize + oHeight.sUnit;
 		
 		if(oWidth.sUnit === "px"){
 			elAppContainer.style.width = (oWidth.nSize + 2) + "px";	
@@ -203,8 +203,8 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 
 	$BEFORE_MSG_APP_READY : function(/*msg*/){
 		this.oApp.exec("ADD_APP_PROPERTY", ["version", nhn.husky.SE_EditingAreaManager.version]);
-		this.oApp.exec("ADD_APP_PROPERTY", ["elContainer", this.elContainer]);
-		this.oApp.exec("ADD_APP_PROPERTY", ["welContainer", jindo.$Element(this.elContainer)]);
+		this.oApp.exec("ADD_APP_PROPERTY", ["elEditingAreaContainer", this.elEditingAreaContainer]);
+		this.oApp.exec("ADD_APP_PROPERTY", ["welEditingAreaContainer", jindo.$Element(this.elEditingAreaContainer)]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["getEditingAreaHeight", jindo.$Fn(this.getEditingAreaHeight, this).bind()]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["getEditingAreaWidth", jindo.$Fn(this.getEditingAreaWidth, this).bind()]);
 		this.oApp.exec("ADD_APP_PROPERTY", ["getRawContents", jindo.$Fn(this.getRawContents, this).bind()]);
@@ -387,12 +387,12 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	},
 
 	$ON_MSG_EDITING_AREA_RESIZE_STARTED : function(){
-		this._fitElementInEditingArea(this.elContainer);
+		this._fitElementInEditingArea(this.elEditingAreaContainer);
 		this.oApp.exec("STOP_AUTORESIZE_EDITING_AREA");	// [SMARTEDITORSUS-677] 사용자가 편집영역 사이즈를 변경하면 자동확장 기능 중지
 		this.oApp.exec("SHOW_EDITING_AREA_COVER");
-		this.elContainer.style.overflow = "hidden";
+		this.elEditingAreaContainer.style.overflow = "hidden";
 
-		this.iStartingHeight = parseInt(this.elContainer.style.height, 10);
+		this.iStartingHeight = parseInt(this.elEditingAreaContainer.style.height, 10);
 	},
 	
 	/**
@@ -448,7 +448,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		}
 		
 		if(ipNewWidth){		
-			this.elContainer.style.width = iNewWidth + sUnit;			
+			this.elEditingAreaContainer.style.width = iNewWidth + sUnit;			
 		}
 	},
 	
@@ -460,7 +460,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		}
 
 		if(ipNewHeight){
-			this.elContainer.style.height = iNewHeight + sUnit;
+			this.elEditingAreaContainer.style.height = iNewHeight + sUnit;
 		}
 	},
 	
@@ -470,12 +470,12 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		var iWidth;
 		var iHeight;
 		
-		if(ipWidthChange !== 0 && this.elContainer.style.width.indexOf("%") === -1){
-			iWidth = this.elContainer.style.width?parseInt(this.elContainer.style.width, 10)+iWidthChange:null;
+		if(ipWidthChange !== 0 && this.elEditingAreaContainer.style.width.indexOf("%") === -1){
+			iWidth = this.elEditingAreaContainer.style.width?parseInt(this.elEditingAreaContainer.style.width, 10)+iWidthChange:null;
 		}
 		
 		if(iHeightChange !== 0){
-			iHeight = this.elContainer.style.height?this.iStartingHeight+iHeightChange:null;
+			iHeight = this.elEditingAreaContainer.style.height?this.iStartingHeight+iHeightChange:null;
 		}
 		
 		if(!ipWidthChange && !iHeightChange){
@@ -487,7 +487,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	
 	$ON_MSG_EDITING_AREA_RESIZE_ENDED : function(/*FnMouseDown, FnMouseMove, FnMouseUp*/){
 		this.oApp.exec("HIDE_EDITING_AREA_COVER");
-		this.elContainer.style.overflow = "";
+		this.elEditingAreaContainer.style.overflow = "";
 		this._setEditingAreaDimension();
 	},
 
@@ -499,7 +499,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		if(!this.elEditingAreaCover){
 			this.elEditingAreaCover = document.createElement("DIV");
 			this.elEditingAreaCover.style.cssText = 'position:absolute;top:0;left:0;z-index:100;background:#000000;filter:alpha(opacity=0);opacity:0.0;-moz-opacity:0.0;-khtml-opacity:0.0;height:100%;width:100%';
-			this.elContainer.appendChild(this.elEditingAreaCover);
+			this.elEditingAreaContainer.appendChild(this.elEditingAreaCover);
 		}
 		if(bDimmed){
 			jindo.$Element(this.elEditingAreaCover).opacity(0.4);
@@ -517,17 +517,17 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	
 	$ON_KEEP_WITHIN_EDITINGAREA : function(elLayer, nHeight){
 		var nTop = parseInt(elLayer.style.top, 10);
-		if(nTop + elLayer.offsetHeight > this.oApp.elContainer.offsetHeight){
+		if(nTop + elLayer.offsetHeight > this.oApp.elEditingAreaContainer.offsetHeight){
 			if(typeof nHeight == "number"){
 				elLayer.style.top = nTop - elLayer.offsetHeight - nHeight + "px";
 			}else{
-				elLayer.style.top = this.oApp.elContainer.offsetHeight - elLayer.offsetHeight + "px";
+				elLayer.style.top = this.oApp.elEditingAreaContainer.offsetHeight - elLayer.offsetHeight + "px";
 			}
 		}
 
 		var nLeft = parseInt(elLayer.style.left, 10);
-		if(nLeft + elLayer.offsetWidth > this.oApp.elContainer.offsetWidth){
-			elLayer.style.left = this.oApp.elContainer.offsetWidth - elLayer.offsetWidth + "px";
+		if(nLeft + elLayer.offsetWidth > this.oApp.elEditingAreaContainer.offsetWidth){
+			elLayer.style.left = this.oApp.elEditingAreaContainer.offsetWidth - elLayer.offsetWidth + "px";
 		}
 	},
 
@@ -549,9 +549,9 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	},
 	
 	_fitElementInEditingArea : function(el){
-		el.style.height = this.elContainer.offsetHeight+"px";
-//		el.style.width = this.elContainer.offsetWidth+"px";
-//		el.style.width = this.elContainer.style.width || (this.elContainer.offsetWidth+"px");
+		el.style.height = this.elEditingAreaContainer.offsetHeight+"px";
+//		el.style.width = this.elEditingAreaContainer.offsetWidth+"px";
+//		el.style.width = this.elEditingAreaContainer.style.width || (this.elEditingAreaContainer.offsetWidth+"px");
 	},
 	
 	attachDocumentEvents : function(doc){
@@ -807,10 +807,10 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	},
 	
 	getEditingAreaWidth : function(){
-		return this.elContainer.offsetWidth;
+		return this.elEditingAreaContainer.offsetWidth;
 	},
 	
 	getEditingAreaHeight : function(){
-		return this.elContainer.offsetHeight;
+		return this.elEditingAreaContainer.offsetHeight;
 	}
 });

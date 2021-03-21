@@ -23,8 +23,8 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	bWYSIWYGEnabled : false,
 	
 	$init : function(elAppContainer){
-		var elContainer = jindo.$$.getSingle("div.container", elAppContainer);
-		this.elDocument = jindo.$$.getSingle("div#document", elContainer);
+		var elContainer = jindo.$$.getSingle("div.editing_area_container", elAppContainer);
+		this.elDocument = jindo.$$.getSingle("div.document", elAppContainer);
 		this.htOptions = nhn.husky.SE2M_Configuration.SE_EditingAreaManager;
 		this.elEditingArea = jindo.$$.getSingle("div.editing_area", this.elDocument);
 		this.elEditor = carota.editor.create(this.elEditingArea);
