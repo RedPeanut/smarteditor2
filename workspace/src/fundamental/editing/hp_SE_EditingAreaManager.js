@@ -125,7 +125,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		
 		this.elContentsField.style.display = "none";
 		
-		this.nMinWidth = parseInt((oDimension.nMinWidth || 60), 10);
+		/* this.nMinWidth = parseInt((oDimension.nMinWidth || 60), 10);
 		this.nMinHeight = parseInt((oDimension.nMinHeight || 60), 10);
 		
 		var oWidth = this._getSize([oDimension.nWidth, oDimension.width, this.elEditingAreaContainer.offsetWidth], this.nMinWidth);
@@ -140,7 +140,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 			elAppContainer.style.width = (oWidth.nSize) + "px";	
 		}else if(oWidth.sUnit === "%"){
 			elAppContainer.style.minWidth = this.nMinWidth + "px";
-		}
+		} */
 	},
 
 	_getSize : function(aSize, nMin){

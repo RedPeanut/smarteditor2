@@ -27,7 +27,7 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	//var elDocument = jindo.$$.getSingle("div#document", elContainer);
 	//console.log("elDocument = " + elDocument);
 
-	var oIRTextarea = elIRField?elIRField:jindo.$$.getSingle("TEXTAREA.blind", elContainer);
+	var oIRTextarea = elIRField?elIRField:jindo.$$.getSingle("textarea.blind", elContainer);
 	var oHTMLSrc = jindo.$$.getSingle("TEXTAREA.se2_input_htmlsrc", elContainer);
 	var oTextArea = jindo.$$.getSingle("TEXTAREA.se2_input_text", elContainer);
 	
@@ -56,12 +56,12 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 		});
 	}
 
-	var htDimension = {
+	/* var htDimension = {
 		nMinHeight: 205,
 		nMinWidth: parseInt(elIRField.style.minWidth, 10) || 570,
 		nHeight: elIRField.style.height || elIRField.offsetHeight,
 		nWidth: elIRField.style.width || elIRField.offsetWidth,
-	};
+	}; */
 	
 	var htConversionMode = {
 		bUseVerticalResizer : htParams.bUseVerticalResizer,
@@ -70,7 +70,7 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	
 	var aAdditionalFontList = htParams.aAdditionalFontList;
 	
-	oEditor.registerPlugin(new nhn.husky.SE_EditingAreaManager("Canvas", oIRTextarea, htDimension,  htParams.fOnBeforeUnload, elAppContainer));
+	oEditor.registerPlugin(new nhn.husky.SE_EditingAreaManager("Canvas", oIRTextarea, /* htDimension */null, htParams.fOnBeforeUnload, elAppContainer));
 	oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Editor(elAppContainer));
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Doc(elAppContainer));
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Frame(elAppContainer));

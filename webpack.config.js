@@ -69,7 +69,7 @@ module.exports = (env = {}) => {
         devServer: {
             port: 8000,
             contentBase: path.join(__dirname, 'dist'),
-            openPage: 'SmartEditor2.html'
+            openPage: 'SmartEditor2Skin.html'
         }
     };
 };
