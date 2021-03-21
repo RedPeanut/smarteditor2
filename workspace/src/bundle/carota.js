@@ -11,7 +11,7 @@ var rect = require('../carota/rect');
 var bundle = {
     node: node,
     editor: editor,
-    document: doc,
+    doc: doc,
     dom: dom,
     runs: runs,
     html: html,

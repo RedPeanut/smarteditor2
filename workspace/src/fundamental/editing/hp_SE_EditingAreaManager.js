@@ -130,12 +130,14 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 		
 		var oWidth = this._getSize([oDimension.nWidth, oDimension.width, this.elEditingAreaContainer.offsetWidth], this.nMinWidth);
 		var oHeight = this._getSize([oDimension.nHeight, oDimension.height, this.elEditingAreaContainer.offsetHeight], this.nMinHeight);
+		console.log("oWidth = " + JSON.stringify(oWidth));
+		console.log("oHeight = " + JSON.stringify(oHeight));
 
 		this.elEditingAreaContainer.style.width = oWidth.nSize + oWidth.sUnit;
 		this.elEditingAreaContainer.style.height = oHeight.nSize + oHeight.sUnit;
 		
 		if(oWidth.sUnit === "px"){
-			elAppContainer.style.width = (oWidth.nSize + 2) + "px";	
+			elAppContainer.style.width = (oWidth.nSize) + "px";	
 		}else if(oWidth.sUnit === "%"){
 			elAppContainer.style.minWidth = this.nMinWidth + "px";
 		}
