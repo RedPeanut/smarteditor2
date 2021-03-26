@@ -1,20 +1,35 @@
 /**
  * @desc 
  */
-nhn.husky.SE_EditingArea_Editor = jindo.$Class({
+nhn.husky.SE_EditingArea = jindo.$Class({
 
-	name: "SE_EditingArea_Editor",
+	name: "SE_EditingArea",
 	
 	$init: function(appContainer) {
 
 		var editingAreaContainer = appContainer.querySelector(".editing_area_container"),
 			document = editingAreaContainer.querySelector(".document"),
-			element = editingArea = document.querySelector(".editing_area");
+			element = this.editingArea = document.querySelector(".editing_area");
 		
 		// We need the host element to be a container:
 		if (carota.dom.effectiveStyle(element, "position") !== "absolute") {
 			element.style.position = "relative";
 		}
+
+		// 모니터 사이즈? 문서 사이즈?
+		var scrollView = document.querySelector("#scrollView");
+		scrollView.style.width = element.clientWidth+"px";
+		scrollView.style.height = element.clientHeight+"px";
+
+		var scrollViewHorizontal = document.querySelector("#scrollViewHorizontal");
+		var scrollViewVertical = document.querySelector("#scrollViewVertical");
+
+		console.log("screen.availWidth = " + screen.availWidth);
+		console.log("screen.availHeight = " + screen.availHeight);
+		scrollViewHorizontal.style.width = screen.availWidth+"px";
+		scrollViewVertical.style.height = screen.availHeight+"px";
+
+		// 
 
 		var paperCanvas = element.querySelector("#paperCanvas"),
 			canvas = editCanvas = element.querySelector("#editCanvas");
@@ -27,8 +42,7 @@ nhn.husky.SE_EditingArea_Editor = jindo.$Class({
 		// TODO: find default document size or default canvas size
 		//canvas.style.left = 20+"px";
 		//canvas.style.top = 20+"px";
-		//canvas.style.width = 400+"px";
-		//canvas.style.height = 300+"px";
+		
 
 		console.log("element.clientWidth = " + element.clientWidth);
 		var availableWidth = element.clientWidth * 1; // adjust to 0.5 to see if we draw in the wrong places!
@@ -54,12 +68,22 @@ nhn.husky.SE_EditingArea_Editor = jindo.$Class({
 		};
 
 		carota.dom.handleEvent(element, 'scroll', paint);
+		
 	},
 
 	$BEFORE_MSG_APP_READY: function() {
 	},
 
 	$ON_MSG_APP_READY: function() {
+		this.oApp.registerBrowserEvent(this.editingArea, "scroll", "EVENT_EDITING_AREA_SCROLL");
+	},
+
+	$BEFORE_EVENT_EDITING_AREA_SCROLL: function() {
+		console.log("$BEFORE_EVENT_EDITING_AREA_SCROLL is called...");
+	},
+
+	$ON_EVENT_EDITING_AREA_SCROLL: function() {
+		console.log("$ON_EVENT_EDITING_AREA_SCROLL is called...");
 	},
 
 	$BEFORE_PASTE_HTML: function() {

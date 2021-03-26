@@ -71,7 +71,7 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	var aAdditionalFontList = htParams.aAdditionalFontList;
 	
 	oEditor.registerPlugin(new nhn.husky.SE_EditingAreaManager("Canvas", oIRTextarea, /* htDimension */null, htParams.fOnBeforeUnload, elAppContainer));
-	oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Editor(elAppContainer));
+	oEditor.registerPlugin(new nhn.husky.SE_EditingArea(elAppContainer));
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Doc(elAppContainer));
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Frame(elAppContainer));
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Canvas(elAppContainer));			// Canvas 모드

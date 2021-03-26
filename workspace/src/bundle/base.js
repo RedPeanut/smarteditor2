@@ -1,7 +1,7 @@
 import "../common/base/hp_SE2M_Menubar.js";
 //import "../common/base/hp_SE2M_Toolbar.js";
 import "../fundamental/editing/hp_SE_EditingAreaManager.js";
-import "../fundamental/editing/hp_SE_EditingArea_Editor.js";
+import "../fundamental/editing/hp_SE_EditingArea.js";
 //import "../fundamental/editing/hp_SE_EditingArea_Doc.js";
 //import "../fundamental/editing/hp_SE_EditingArea_Frame.js";
 //import "../fundamental/editing/hp_SE_EditingArea_Canvas.js";
