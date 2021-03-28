@@ -93,7 +93,7 @@ nhn.husky.SE2M_Toolbar = jindo.$Class({
 		oAppContainer = jindo.$(oAppContainer) || document;
 		this.rxUI = new RegExp(this.sUIClassPrefix+"([^ ]+)");
 
-		this.toolbarArea = jindo.$$.getSingle(".se2_tool", oAppContainer);
+		this.toolbarArea = jindo.$$.getSingle(".tool_bar", oAppContainer);
 		this.aAllUI = jindo.$$("[class*=" + this.sUIClassPrefix + "]", this.toolbarArea);
 		this.elTextTool = jindo.$$.getSingle("div.husky_seditor_text_tool", this.toolbarArea);	// [SMARTEDITORSUS-1124] 텍스트 툴바 버튼의 라운드 처리
 

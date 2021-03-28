@@ -118,7 +118,7 @@ nhn.husky.SE_EditingAreaManager = jindo.$Class({
 	$init : function(sDefaultEditingMode, elContentsField, oDimension, fOnBeforeUnload, elAppContainer){
 		this.sDefaultEditingMode = sDefaultEditingMode;
 		this.elContentsField = jindo.$(elContentsField);
-		this.elEditingAreaContainer = jindo.$$.getSingle("div.editing_area_container", elAppContainer);
+		this.elEditingAreaContainer = jindo.$$.getSingle("div.container", elAppContainer);
 		this.fOnBeforeUnload = fOnBeforeUnload;
 		
 		this.oEditingMode = {};

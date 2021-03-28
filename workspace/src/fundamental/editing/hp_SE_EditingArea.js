@@ -7,67 +7,38 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 	
 	$init: function(appContainer) {
 
-		var editingAreaContainer = appContainer.querySelector(".editing_area_container"),
-			document = editingAreaContainer.querySelector(".document"),
-			element = this.editingArea = document.querySelector(".editing_area");
+		this.appContainer = appContainer;
+		this.menuBar = appContainer.querySelector("#menuBar");
+		this.toolBar = appContainer.querySelector("#toolBar");
+		this.statusBar = appContainer.querySelector("#statusBar");
+
+		var container = this.container = appContainer.querySelector(".container"),
+			document = this.document = container.querySelector(".document"),
+			ruler = this.ruler = container.querySelector(".ruler"),
+			editingArea = this.editingArea = document.querySelector(".editing_area");
 		
-		// We need the host element to be a container:
+		/* // We need the host element to be a container:
 		if (carota.dom.effectiveStyle(element, "position") !== "absolute") {
 			element.style.position = "relative";
-		}
+		} */
 
-		// 모니터 사이즈? 문서 사이즈?
-		var scrollView = document.querySelector("#scrollView");
-		scrollView.style.width = element.clientWidth+"px";
-		scrollView.style.height = element.clientHeight+"px";
+		this.scrollView = document.querySelector("#scrollView");
+		this.scrollViewHorizontal = document.querySelector("#scrollViewHorizontal");
+		this.scrollViewVertical = document.querySelector("#scrollViewVertical");
 
-		var scrollViewHorizontal = document.querySelector("#scrollViewHorizontal");
-		var scrollViewVertical = document.querySelector("#scrollViewVertical");
-
-		console.log("screen.availWidth = " + screen.availWidth);
+		/* console.log("screen.availWidth = " + screen.availWidth);
 		console.log("screen.availHeight = " + screen.availHeight);
 		scrollViewHorizontal.style.width = screen.availWidth+"px";
-		scrollViewVertical.style.height = screen.availHeight+"px";
+		scrollViewVertical.style.height = screen.availHeight+"px"; */
 
 		// 
-
-		var paperCanvas = element.querySelector("#paperCanvas"),
-			canvas = editCanvas = element.querySelector("#editCanvas");
+		var paperCanvas = editingArea.querySelector("#paperCanvas"),
+			editCanvas = this.editCanvas = editingArea.querySelector("#editCanvas");
 		this.doc = carota.doc();
-		
 		console.log("doc.width() = " + this.doc.width());
 		console.log("doc.frame.bounds().h = " + this.doc.frame.bounds().h);
-		var docHeight = this.doc.frame.bounds().h;
-
-		// TODO: find default document size or default canvas size
-		//canvas.style.left = 20+"px";
-		//canvas.style.top = 20+"px";
-		
-
-		console.log("element.clientWidth = " + element.clientWidth);
-		var availableWidth = element.clientWidth * 1; // adjust to 0.5 to see if we draw in the wrong places!
-		console.log("availableWidth = " + availableWidth);
-
-		var dpr = Math.max(1, window.devicePixelRatio || 1);
-		
-		var logicalWidth = Math.max(this.doc.frame.actualWidth(), element.clientWidth),
-			logicalHeight = element.clientHeight;
-
-		console.log("this.doc.frame.actualWidth() = " + this.doc.frame.actualWidth());
-
-		var paint = function() {
-			var dpr = Math.max(1, window.devicePixelRatio || 1);
-			//console.log("dpr = " + dpr);
-			var ctx = canvas.getContext("2d");
-			ctx.scale(dpr, dpr);
-		};
-
-		// position in center when window resized
-		var position = function() {
-
-		};
-
-		carota.dom.handleEvent(element, 'scroll', paint);
+		//var docWidth = this.doc.width();
+		//var docHeight = this.doc.frame.bounds().h;
 		
 	},
 

@@ -1,8 +1,8 @@
 @charset "UTF-8";
 /* NHN Web Standardization Team (http://html.nhndesign.com/) HHJ 090226 */
 /* TEXT_TOOLBAR : FONTNAME */
-#smart_editor2 .se2_tool .se2_l_font_fam{width:202px;margin:0;padding:0}
-#smart_editor2 .se2_tool .se2_l_font_fam li{display:block;width:202px;height:21px;margin:0;padding:0;color:#333;cursor:pointer}
+#smart_editor2 .tool_bar .se2_l_font_fam{width:202px;margin:0;padding:0}
+#smart_editor2 .tool_bar .se2_l_font_fam li{display:block;width:202px;height:21px;margin:0;padding:0;color:#333;cursor:pointer}
 #smart_editor2 .se2_l_font_fam .hover,#smart_editor2 .se2_l_font_fam .active{background:#ebebeb}
 #smart_editor2 .se2_l_font_fam button{width:200px;height:21px;margin:0;padding:2px 0 2px 0px;background:none;text-align:left}
 #smart_editor2 .se2_l_font_fam button span{display:block;visibility:visible;overflow:visible;position:relative;top:auto;left:auto;width:auto;height:auto;margin:0 0 0 4px;padding:0;font-size:12px;line-height:normal;color:#333}
@@ -10,8 +10,8 @@
 #smart_editor2 .se2_l_font_fam button span em{visibility:visible;overflow:auto;position:static;width:auto;height:auto;margin-right:-4px;font-size:12px;color:#888}
 #smart_editor2 .se2_l_font_fam .se2_division{width:162px;height:2px !important;margin:1px 0 1px 0px;border:0;background:url("../../img/bg_line1.gif") 0 0 repeat-x;font-size:0;cursor:default}
 /* TEXT_TOOLBAR : FONTSIZE */
-#smart_editor2 .se2_tool .se2_l_font_size{width:302px;margin:0;padding:0}
-#smart_editor2 .se2_tool .se2_l_font_size li{width:302px;margin:0;padding:0;color:#333;cursor:pointer}
+#smart_editor2 .tool_bar .se2_l_font_size{width:302px;margin:0;padding:0}
+#smart_editor2 .tool_bar .se2_l_font_size li{width:302px;margin:0;padding:0;color:#333;cursor:pointer}
 #smart_editor2 .se2_l_font_size .hover,#smart_editor2 .se2_l_font_size .active{background:#ebebeb}
 #smart_editor2 .se2_l_font_size button{width:300px;height:auto;margin:0;padding:2px 0 1px 0px;*padding:4px 0 1px 0px;background:none;text-align:left}
 #smart_editor2 .se2_l_font_size button span{display:block;visibility:visible;overflow:visible;position:relative;top:auto;left:auto;width:auto;height:auto;margin:0 0 0 4px;padding:0;line-height:normal;color:#373737;letter-spacing:0px}
@@ -59,8 +59,8 @@
 #smart_editor2 .se2_l_line_height_user .btn_up{position:absolute;top:2px;*top:3px;left:68px;width:13px;height:8px;background:url("../../img/ko_KR/btn_set.png?160622") -86px -54px no-repeat}
 #smart_editor2 .se2_l_line_height_user .btn_down{position:absolute;top:10px;*top:11px;left:68px;width:13px;height:8px;background:url("../../img/ko_KR/btn_set.png?160622") -86px -62px no-repeat}
 #smart_editor2 .se2_l_line_height_user .btn_area{margin:5px 0 10px 0}
-#smart_editor2 .se2_tool .btn_area .se2_btn_apply3{width:41px;height:24px;background:url("../../img/ko_KR/btn_set.png?160622") no-repeat}
-#smart_editor2 .se2_tool .btn_area .se2_btn_cancel3{width:39px;height:24px;margin-left:3px;background:url("../../img/ko_KR/btn_set.png?160622") -41px 0 no-repeat}
+#smart_editor2 .tool_bar .btn_area .se2_btn_apply3{width:41px;height:24px;background:url("../../img/ko_KR/btn_set.png?160622") no-repeat}
+#smart_editor2 .tool_bar .btn_area .se2_btn_cancel3{width:39px;height:24px;margin-left:3px;background:url("../../img/ko_KR/btn_set.png?160622") -41px 0 no-repeat}
 /* TEXT_TOOLBAR : QUOTE */
 #smart_editor2 .se2_quote{width:425px;height:56px}
 #smart_editor2 .se2_quote ul{_display:inline;float:left;margin:11px 0 0 9px;padding:0}

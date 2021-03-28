@@ -8,5 +8,5 @@ div.innerHTML = matches[1];
 
 export default {
     FULL: matches[1],
-    TOOLBAR: div.querySelector("#se2_tool").outerHTML
+    TOOLBAR: div.querySelector("#toolBar").outerHTML
 };
