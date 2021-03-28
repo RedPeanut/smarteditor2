@@ -47,15 +47,27 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 
 	$ON_MSG_APP_READY: function() {
 		//this.oApp.registerBrowserEvent(this.editingArea, "scroll", "EVENT_EDITING_AREA_SCROLL");
+		this.oApp.registerBrowserEvent(this.scrollView, "scroll", "EVENT_SCROLL_VIEW_SCROLL", [], null, 100);
+		this.oApp.registerBrowserEvent(window, "resize", "EVENT_WINDOW_RESIZE", [], null, 100);
+		//this.oApp.registerBrowserEvent(window, "resize", "EVENT_WINDOW_RESIZE");
+		//this.oApp.registerBrowserEvent(this.scrollView, "x-scroll", "EVENT_SCROLL_VIEW_X_SCROLL");
+		//this.oApp.registerBrowserEvent(this.scrollView, "y-scroll", "EVENT_SCROLL_VIEW_Y_SCROLL");
 	},
 
-	$BEFORE_EVENT_EDITING_AREA_SCROLL: function() {
-		console.log("$BEFORE_EVENT_EDITING_AREA_SCROLL is called...");
+	$ON_EVENT_SCROLL_VIEW_SCROLL: function() {
+		//console.log("$ON_EVENT_SCROLL_VIEW_SCROLL is called...");
+		//console.log("this.scrollView.left = " + this.scrollView.left);
+		//console.log("this.scrollView.top = " + this.scrollView.top);
+		//console.log("this.scrollView.scrollLeft = " + this.scrollView.scrollLeft);
+		//console.log("this.scrollView.scrollTop = " + this.scrollView.scrollTop);
+		this.oApp.exec("EDITING_AREA_PAINT");
 	},
 
-	$ON_EVENT_EDITING_AREA_SCROLL: function() {
-		console.log("$ON_EVENT_EDITING_AREA_SCROLL is called...");
+	$ON_EVENT_WINDOW_RESIZE: function() {
+		console.log("$ON_EVENT_SCROLL_VIEW_RESIZE is called...");
+		this.oApp.exec("EDITING_AREA_PAINT");
 	},
+
 
 	$BEFORE_PASTE_HTML: function() {
 		console.log("$BEFORE_PASTE_HTML is called...");

@@ -66,8 +66,19 @@ if (!nhn.husky){nhn.husky = {};}
 			this.exec = this._doExec;
 			this.exec(msg, args, oEvent);
 		},
-	
-		delayedExec : function(msg, args, nDelay, oEvent){
+
+		absorbedExec: function(msg, args, nAbsorb, oEvent) {
+			var fExec = jindo.$Fn(this.exec, this).bind(msg, args, oEvent);
+			if (this["timerId_"+msg] != null) {
+				//console.log("clearTimeout() is called...");
+				//console.log("" + this["timerId_"+msg]);
+				clearTimeout(this["timerId_"+msg]);
+				this["timerId_"+msg] = setTimeout(fExec, nAbsorb);
+			} else
+				this["timerId_"+msg] = setTimeout(fExec, nAbsorb);
+		},
+
+		delayedExec: function(msg, args, nDelay, oEvent) {
 			var fExec = jindo.$Fn(this.exec, this).bind(msg, args, oEvent);
 			setTimeout(fExec, nDelay);
 		},
@@ -125,9 +136,17 @@ if (!nhn.husky){nhn.husky = {};}
 	
 		disableMessage : function(sMessage, bDisable){this.oDisabledMessage[sMessage] = bDisable;},
 	
-		registerBrowserEvent : function(obj, sEvent, sMessage, aParams, nDelay){
+		registerBrowserEvent: function(obj, sEvent, sMessage, aParams, nDelay, nAbsorb) {
 			aParams = aParams || [];
-			var func = (nDelay)?jindo.$Fn(this.delayedExec, this).bind(sMessage, aParams, nDelay):jindo.$Fn(this.exec, this).bind(sMessage, aParams);
+			var func = nAbsorb ? jindo.$Fn(this.delayedExec, this).bind(sMessage, aParams, nAbsorb)
+				: nDelay ? jindo.$Fn(this.delayedExec, this).bind(sMessage, aParams, nDelay) 
+				: jindo.$Fn(this.exec, this).bind(sMessage, aParams);
+			if (nAbsorb)
+				func = jindo.$Fn(this.absorbedExec, this).bind(sMessage, aParams, nAbsorb);
+			else if(nDelay)
+				func = jindo.$Fn(this.delayedExec, this).bind(sMessage, aParams, nDelay);
+			else
+				func = jindo.$Fn(this.exec, this).bind(sMessage, aParams);
 			return jindo.$Fn(func, this).attach(obj, sEvent);
 		},
 	
