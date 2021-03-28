@@ -238,8 +238,13 @@ body,#smart_editor2,#smart_editor2 p,#smart_editor2 h1,#smart_editor2 h2,#smart_
 /*  */
 #smart_editor2 .se2_document .editing_area {margin:0 auto;}
 
+/*  */
+.BLINK_CURSOR {opacity:1.0;animation:blink 1.2s infinite;}
+.HIDDEN_CURSOR {opacity:0.0;animation:none;z-index:-1000;}
+
 /* 상태바 */
 .status_bar {height:22px;padding:0 10px;border-top:1px solid #b4b4b4;}
 .status_bar .status_page {line-height:22px;}
 .status_bar .vertical_line_wrap {padding:0 10px;display:inline-block;}
 .status_bar .vertical_line_wrap .col_line {/* border-left-color:#b4b4b4;border-right:1px solid #fff */}
+

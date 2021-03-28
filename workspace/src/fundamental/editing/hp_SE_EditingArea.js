@@ -54,6 +54,10 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 		//this.oApp.registerBrowserEvent(this.scrollView, "y-scroll", "EVENT_SCROLL_VIEW_Y_SCROLL");
 	},
 
+	$AFTER_MSG_APP_READY : function(){
+		//this.oApp.exec("EDITING_AREA_PAINT");
+	},
+
 	$ON_EVENT_SCROLL_VIEW_SCROLL: function() {
 		//console.log("$ON_EVENT_SCROLL_VIEW_SCROLL is called...");
 		//console.log("this.scrollView.left = " + this.scrollView.left);
@@ -68,23 +72,16 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 		this.oApp.exec("EDITING_AREA_PAINT");
 	},
 
-
-	$BEFORE_PASTE_HTML: function() {
-		console.log("$BEFORE_PASTE_HTML is called...");
-	},
-	
 	$ON_PASTE_HTML: function(sHTML, oPSelection, htOption) {
 		console.log("$ON_PASTE_HTML is called...");
 		var runs = carota.html.parse(sHTML, {
 			//carota: { color: 'orange', bold: true, size: 14 }
 		});
 		this.doc.load(runs);
+		console.log("this.doc.width() = " + this.doc.width());
+		console.log("this.doc.frame.bounds().h = " + this.doc.frame.bounds().h);
 		console.log("this.doc.frame.actualWidth() = " + this.doc.frame.actualWidth());
 		this.oApp.exec("EDITING_AREA_PAINT");
-	},
-
-	$AFTER_PASTE_HTML: function() {
-		console.log("$AFTER_PASTE_HTML is called...");
 	},
 	
 	$ON_EDITING_AREA_PAINT: function() {
@@ -127,5 +124,33 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 		//console.log("this.scrollView.scrollTop = " + this.scrollView.scrollTop);
 		//this.doc.draw(ctx, carota.rect(padding+this.scrollView.scrollLeft, padding+this.scrollView.scrollTop, logicalWidth-2*padding, logicalHeight-2*padding));
 		this.doc.draw(ctx, carota.rect(0, 0, this.editingArea.clientWidth, this.editingArea.clientHeight));
+	},
+
+	$ON_EDITING_AREA_UPDATE: function() {
+		var requirePaint = false;
+		/* var newFocused = document.activeElement === textArea;
+		if (focused !== newFocused) {
+			focused = newFocused;
+			requirePaint = true;
+		}
+
+		var now = new Date().getTime();
+		if (now > nextCaretToggle) {
+			nextCaretToggle = now + 500;
+			if (this.doc.toggleCaret()) {
+				requirePaint = true;
+			}
+		}
+
+		if (this.editingArea.clientWidth !== cachedWidth ||
+			this.editingArea.clientHeight !== cachedHeight) {
+			requirePaint = true;
+			cachedWidth = this.editingArea.clientWidth;
+			cachedHeight = this.editingArea.clientHeight;
+		} */
+
+		if (requirePaint) {
+			paint();
+		}
 	}
 });

@@ -24,7 +24,6 @@ nhn.husky.SE_EditingArea_Canvas = jindo.$Class({
 	
 	$init : function(elAppContainer){
 		//var elContainer = jindo.$$.getSingle("div.container", elAppContainer);
-		//var elContainer = jindo.$$.getSingle("div.editing_area_container", elAppContainer);
 		//this.elDocument = jindo.$$.getSingle("div.document", elAppContainer);
 		this.htOptions = nhn.husky.SE2M_Configuration.SE_EditingAreaManager;
 		this.elEditingArea = jindo.$$.getSingle("div.editing_area", elAppContainer);

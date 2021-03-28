@@ -61,7 +61,9 @@ var prototype = node.derive({
     layout: function() {
         this.frame = null;
         try {
+            //console.log('this._width = ' + this._width);
             this.frame = per(this.words).per(frame(0, 0, this._width, 0, this)).first();
+            //console.log('this._width = ' + this._width);
         } catch (x) {
             console.error(x);
         }

@@ -83,7 +83,7 @@ if (!nhn.husky){nhn.husky = {};}
 			setTimeout(fExec, nDelay);
 		},
 	
-		_doExec : function(msg, args, oEvent){
+		_doExec: function(msg, args, oEvent) {
 			var bContinue = false;
 	
 			// Lazy메시지가 있으면 파일을 로딩한다.
