@@ -4,126 +4,178 @@
 nhn.husky.SE_EditingArea = jindo.$Class({
 
 	name: "SE_EditingArea",
-	
-	$init: function(appContainer) {
+	/* RATIO: 3.78, //ratio=px/mm, mm to px ratio
+	documentWidth: Math.floor(210*this.RATIO), //px
+	documentHeight: Math.floor(297*this.RATIO), //px
+	documentMargin: 20, //px */
 
+	$init: function(appContainer) {
 		this.appContainer = appContainer;
 		this.menuBar = appContainer.querySelector("#menuBar");
 		this.toolBar = appContainer.querySelector("#toolBar");
 		this.statusBar = appContainer.querySelector("#statusBar");
-
+	
 		var container = this.container = appContainer.querySelector(".container"),
 			document = this.document = container.querySelector(".document"),
 			ruler = this.ruler = container.querySelector(".ruler"),
 			editingArea = this.editingArea = document.querySelector(".editing_area");
-		
-		/* // We need the host element to be a container:
-		if (carota.dom.effectiveStyle(element, "position") !== "absolute") {
-			element.style.position = "relative";
-		} */
-
+	
 		this.scrollView = document.querySelector("#scrollView");
 		this.scrollViewHorizontal = document.querySelector("#scrollViewHorizontal");
 		this.scrollViewVertical = document.querySelector("#scrollViewVertical");
-
-		/* console.log("screen.availWidth = " + screen.availWidth);
-		console.log("screen.availHeight = " + screen.availHeight);
-		scrollViewHorizontal.style.width = screen.availWidth+"px";
-		scrollViewVertical.style.height = screen.availHeight+"px"; */
-
-		// 
-		var paperCanvas = editingArea.querySelector("#paperCanvas"),
-			editCanvas = this.editCanvas = editingArea.querySelector("#editCanvas");
-		this.doc = carota.doc();
-		console.log("doc.width() = " + this.doc.width());
-		console.log("doc.frame.bounds().h = " + this.doc.frame.bounds().h);
-		//var docWidth = this.doc.width();
-		//var docHeight = this.doc.frame.bounds().h;
+		this.editCanvas = editingArea.querySelector("#editCanvas");
 		
+		this.doc = carota.doc();
+		
+		//주요 상수값들 및 변수 선언
+		this.RATIO = 3.78; //ratio=px/mm; mm to px ratio
+		this.documentWidth = Math.floor(210*this.RATIO); //px
+		this.documentHeight = Math.floor(297*this.RATIO); //px
+		this.documentMargin = 20; //px
+
+		this.paddingTop = Math.floor(20*this.RATIO);
+		this.paddingBottom = Math.floor(15*this.RATIO);
+		this.paddingLeft = Math.floor(30*this.RATIO);
+		this.paddingRight = Math.floor(30*this.RATIO);
+		this.paddingHead = Math.floor(15*this.RATIO);
+		this.paddingTail = Math.floor(15*this.RATIO); //px
+
+		this.offsetX = 0;
+		this.offsetY = 0;
 	},
 
 	$BEFORE_MSG_APP_READY: function() {
 	},
 
 	$ON_MSG_APP_READY: function() {
-		//this.oApp.registerBrowserEvent(this.editingArea, "scroll", "EVENT_EDITING_AREA_SCROLL");
 		this.oApp.registerBrowserEvent(this.scrollView, "scroll", "EVENT_SCROLL_VIEW_SCROLL", [], null, 100);
 		this.oApp.registerBrowserEvent(window, "resize", "EVENT_WINDOW_RESIZE", [], null, 100);
-		//this.oApp.registerBrowserEvent(window, "resize", "EVENT_WINDOW_RESIZE");
-		//this.oApp.registerBrowserEvent(this.scrollView, "x-scroll", "EVENT_SCROLL_VIEW_X_SCROLL");
-		//this.oApp.registerBrowserEvent(this.scrollView, "y-scroll", "EVENT_SCROLL_VIEW_Y_SCROLL");
 	},
 
-	$AFTER_MSG_APP_READY : function(){
-		//this.oApp.exec("EDITING_AREA_PAINT");
+	$AFTER_MSG_APP_READY : function() {
+		this.oApp.exec("EVENT_WINDOW_RESIZE");
 	},
 
 	$ON_EVENT_SCROLL_VIEW_SCROLL: function() {
-		//console.log("$ON_EVENT_SCROLL_VIEW_SCROLL is called...");
-		//console.log("this.scrollView.left = " + this.scrollView.left);
-		//console.log("this.scrollView.top = " + this.scrollView.top);
-		//console.log("this.scrollView.scrollLeft = " + this.scrollView.scrollLeft);
-		//console.log("this.scrollView.scrollTop = " + this.scrollView.scrollTop);
 		this.oApp.exec("EDITING_AREA_PAINT");
 	},
 
 	$ON_EVENT_WINDOW_RESIZE: function() {
-		console.log("$ON_EVENT_SCROLL_VIEW_RESIZE is called...");
+		this.editingArea.style.width = 100+"%";
+		this.editingArea.style.height = this.appContainer.clientHeight - (this.menuBar.clientHeight + this.toolBar.clientHeight + this.ruler.clientHeight + this.statusBar.clientHeight) + "px";
+
+		this.scrollView.style.width = this.editingArea.clientWidth+"px";
+		this.scrollView.style.height = this.editingArea.clientHeight+"px";
+
 		this.oApp.exec("EDITING_AREA_PAINT");
+		this.oApp.exec("POSITION_CENTER");
 	},
 
 	$ON_PASTE_HTML: function(sHTML, oPSelection, htOption) {
-		console.log("$ON_PASTE_HTML is called...");
+		//console.log("$ON_PASTE_HTML is called...");
 		var runs = carota.html.parse(sHTML, {
 			//carota: { color: 'orange', bold: true, size: 14 }
 		});
 		this.doc.load(runs);
-		console.log("this.doc.width() = " + this.doc.width());
-		console.log("this.doc.frame.bounds().h = " + this.doc.frame.bounds().h);
-		console.log("this.doc.frame.actualWidth() = " + this.doc.frame.actualWidth());
-		this.oApp.exec("EDITING_AREA_PAINT");
+		this.oApp.exec("EVENT_WINDOW_RESIZE");
+		//this.oApp.exec("EDITING_AREA_PAINT");
+		//this.oApp.exec("POSITION_CENTER");
 	},
-	
+
+	$ON_POSITION_CENTER: function() {
+		//console.log("$ON_POSITON_CENTER is called...");
+		var editingAreaWidth = this.editingArea.clientWidth,
+			editingAreaHeight = this.editingArea.clientHeight;
+
+		if (this.documentWidth > editingAreaWidth) {
+			this.scrollView.scrollLeft = ((this.documentWidth+this.documentMargin*2)-editingAreaWidth)/2;
+			this.oApp.exec("EDITING_AREA_PAINT");
+		}
+	},
 	$ON_EDITING_AREA_PAINT: function() {
-		//console.log("$ON_EDITING_AREA_PAINT is called...");
 
-		this.editingArea.style.width = 100+"%";
-		this.editingArea.style.height = this.appContainer.clientHeight - (this.menuBar.clientHeight + this.toolBar.clientHeight + this.ruler.clientHeight + this.statusBar.clientHeight) + "px";
+		console.log("$ON_EDITING_AREA_PAINT is called...");
+
+		var editingAreaWidth = this.editingArea.clientWidth,
+			editingAreaHeight = this.editingArea.clientHeight;
 		
-		this.scrollView.style.width = this.editingArea.clientWidth+"px";
-		this.scrollView.style.height = this.editingArea.clientHeight+"px";
+		this.offsetX = (editingAreaWidth-this.documentWidth)/2;
+		this.offsetY = (editingAreaHeight-this.documentHeight)/2;
 
-		//A4=210x297(mm),Document=794x1123(px,macbook 15")
-		var documentWidth = Math.floor(210*3.78);
-		var documentHeight = Math.floor(297*3.78);
-		var padding = 20;
+		if (this.offsetX < 0) this.offsetX = 0;
+		if (this.offsetY < 0) this.offsetY = 0;
 
-		this.scrollViewHorizontal.style.width = documentWidth + padding*2 + "px";
-		this.scrollViewVertical.style.height = documentHeight + padding*2 + "px";
+		this.offsetX += this.documentMargin;
+		this.offsetY += this.documentMargin;
 
-		var availableWidth = documentWidth;
-		if (this.doc.width() != availableWidth)
-			this.doc.width(availableWidth);
+		//console.log("this.offsetX = " + this.offsetX);
+		//console.log("this.offsetY = " + this.offsetY);
 
-		var logicalWidth = this.editingArea.clientWidth,
-			logicalHeight = this.editingArea.clientHeight;
+		//draw paper
 
 		var dpr = Math.max(1, window.devicePixelRatio || 1);
 		
-		this.editCanvas.width = dpr * logicalWidth;
-		this.editCanvas.height = dpr * logicalHeight;
-		this.editCanvas.style.width = logicalWidth + 'px';
-		this.editCanvas.style.height = logicalHeight + 'px';
-		
-		//console.log("dpr = " + dpr);
+		var canvasWidth = Math.max(this.documentWidth, editingAreaWidth),
+			canvasHeight = Math.min(this.documentHeight, editingAreaHeight)-16;
+
+		this.editCanvas.width = dpr * canvasWidth;
+		this.editCanvas.height = dpr * canvasHeight;
+		this.editCanvas.style.width = canvasWidth+"px";
+		this.editCanvas.style.height = canvasHeight+"px";
+
+		this.scrollViewHorizontal.style.width = canvasWidth+"px";
+		this.scrollViewVertical.style.height = this.documentHeight+"px";
+
 		var ctx = this.editCanvas.getContext("2d");
 		ctx.scale(dpr, dpr);
+		ctx.translate(-this.scrollView.scrollLeft, -this.scrollView.scrollTop);
 
-		ctx.clearRect(0, 0, this.editingArea.clientWidth, this.editingArea.clientHeight);
-		//console.log("this.scrollView.scrollLeft = " + this.scrollView.scrollLeft);
-		//console.log("this.scrollView.scrollTop = " + this.scrollView.scrollTop);
-		//this.doc.draw(ctx, carota.rect(padding+this.scrollView.scrollLeft, padding+this.scrollView.scrollTop, logicalWidth-2*padding, logicalHeight-2*padding));
-		this.doc.draw(ctx, carota.rect(0, 0, this.editingArea.clientWidth, this.editingArea.clientHeight));
+		ctx.clearRect(0, 0, canvasWidth, this.documentHeight);
+
+		ctx.fillStyle = "white";
+		ctx.fillRect(this.offsetX, this.offsetY, this.documentWidth, this.documentHeight);
+
+		this._drawPaddingMark(ctx);
+
+		var availableWidth = this.documentWidth-(this.paddingLeft+this.paddingRight),
+			availableHeight = this.documentHeight-(this.paddingTop+this.paddingHead+this.paddingBottom+this.paddingTail);
+		
+		this.doc.layout(this.offsetX+this.paddingLeft, this.offsetY+this.paddingTop+this.paddingHead, availableWidth);
+		this.doc.draw(ctx, carota.rect(0, 0, availableWidth, availableHeight));
+
+	},
+
+	_drawPaddingMark: function(ctx) {
+
+		ctx.beginPath();
+
+		ctx.strokeStyle = "#c5c5c5";
+
+		//LT
+		ctx.moveTo(this.offsetX+this.paddingLeft, this.offsetY+this.paddingTop+this.paddingHead);
+		ctx.lineTo(this.offsetX+this.paddingLeft, this.offsetY+this.paddingTop+this.paddingHead-20);
+		ctx.moveTo(this.offsetX+this.paddingLeft, this.offsetY+this.paddingTop+this.paddingHead);
+		ctx.lineTo(this.offsetX+this.paddingLeft-20, this.offsetY+this.paddingTop+this.paddingHead);
+
+		//RT
+		ctx.moveTo(this.offsetX+this.documentWidth-this.paddingLeft, this.offsetY+this.paddingTop+this.paddingHead);
+		ctx.lineTo(this.offsetX+this.documentWidth-this.paddingLeft, this.offsetY+this.paddingTop+this.paddingHead-20);
+		ctx.moveTo(this.offsetX+this.documentWidth-this.paddingLeft, this.offsetY+this.paddingTop+this.paddingHead);
+		ctx.lineTo(this.offsetX+this.documentWidth-this.paddingLeft+20, this.offsetY+this.paddingTop+this.paddingHead);
+
+		//RB
+		ctx.moveTo(this.offsetX+this.documentWidth-this.paddingRight, this.offsetY+this.documentHeight-this.paddingBottom-this.paddingTail);
+		ctx.lineTo(this.offsetX+this.documentWidth-this.paddingRight, this.offsetY+this.documentHeight-this.paddingBottom-this.paddingTail+20);
+		ctx.moveTo(this.offsetX+this.documentWidth-this.paddingRight, this.offsetY+this.documentHeight-this.paddingBottom-this.paddingTail);
+		ctx.lineTo(this.offsetX+this.documentWidth-this.paddingRight+20, this.offsetY+this.documentHeight-this.paddingBottom-this.paddingTail);
+
+		//LB
+		ctx.moveTo(this.offsetX+this.paddingLeft, this.offsetY+this.documentHeight-this.paddingBottom-this.paddingTail);
+		ctx.lineTo(this.offsetX+this.paddingLeft, this.offsetY+this.documentHeight-this.paddingBottom-this.paddingTail+20);
+		ctx.moveTo(this.offsetX+this.paddingLeft, this.offsetY+this.documentHeight-this.paddingBottom-this.paddingTail);
+		ctx.lineTo(this.offsetX+this.paddingLeft-20, this.offsetY+this.documentHeight-this.paddingBottom-this.paddingTail);
+
+		ctx.stroke();
 	},
 
 	$ON_EDITING_AREA_UPDATE: function() {

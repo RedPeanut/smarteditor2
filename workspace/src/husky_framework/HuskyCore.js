@@ -66,7 +66,7 @@ if (!nhn.husky){nhn.husky = {};}
 			this.exec = this._doExec;
 			this.exec(msg, args, oEvent);
 		},
-
+		
 		absorbedExec: function(msg, args, nAbsorb, oEvent) {
 			var fExec = jindo.$Fn(this.exec, this).bind(msg, args, oEvent);
 			if (this["timerId_"+msg] != null) {

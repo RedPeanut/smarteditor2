@@ -58,12 +58,13 @@ var prototype = node.derive({
         this.contentChanged.fire();
         this.select(0, 0, takeFocus);
     },
-    layout: function() {
+    layout: function(left, top, width, height) {
         this.frame = null;
         try {
-            //console.log('this._width = ' + this._width);
-            this.frame = per(this.words).per(frame(0, 0, this._width, 0, this)).first();
-            //console.log('this._width = ' + this._width);
+            this._left = left || 0;
+            this._top = top || 0;
+            this._width = width || 0;
+            this.frame = per(this.words).per(frame(this._left, this._top, this._width, 0, this)).first();
         } catch (x) {
             console.error(x);
         }
@@ -289,9 +290,8 @@ var prototype = node.derive({
         this.editFilters.push(filter);
     },
     width: function(width) {
-        if (arguments.length === 0) {
+        if (arguments.length === 0)
             return this._width;
-        }
         this._width = width;
         this.layout();
     },
@@ -446,6 +446,8 @@ var prototype = node.derive({
 
 exports = module.exports = function() {
     var doc = Object.create(prototype);
+    doc._left = 0;
+    doc._top = 0;
     doc._width = 0;
     doc.selection = { start: 0, end: 0 };
     doc.caretVisible = true;
