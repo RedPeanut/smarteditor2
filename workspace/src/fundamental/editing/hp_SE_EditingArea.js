@@ -49,7 +49,7 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 	},
 
 	$ON_MSG_APP_READY: function() {
-		this.oApp.registerBrowserEvent(this.scrollView, "scroll", "EVENT_SCROLL_VIEW_SCROLL", [], null, 100);
+		this.oApp.registerBrowserEvent(this.scrollView, "scroll", "EVENT_SCROLL_VIEW_SCROLL", [], null, 10);
 		this.oApp.registerBrowserEvent(window, "resize", "EVENT_WINDOW_RESIZE", [], null, 100);
 	},
 
@@ -90,9 +90,10 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 
 		if (this.documentWidth > editingAreaWidth) {
 			this.scrollView.scrollLeft = ((this.documentWidth+this.documentMargin*2)-editingAreaWidth)/2;
-			this.oApp.exec("EDITING_AREA_PAINT");
+			//this.oApp.exec("EDITING_AREA_PAINT");
 		}
 	},
+	
 	$ON_EDITING_AREA_PAINT: function() {
 
 		console.log("$ON_EDITING_AREA_PAINT is called...");
