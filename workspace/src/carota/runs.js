@@ -67,7 +67,7 @@ exports.format = function(run, template) {
 
 exports.consolidate = function() {
     var current;
-    return function (emit, run) {
+    return function(emit, run) {
         if (!current || !exports.sameFormatting(current, run) ||
             (typeof current.text != 'string') ||
             (typeof run.text != 'string')) {

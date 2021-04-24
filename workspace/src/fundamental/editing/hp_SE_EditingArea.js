@@ -4,6 +4,7 @@
 nhn.husky.SE_EditingArea = jindo.$Class({
 
 	name: "SE_EditingArea",
+
 	/* RATIO: 3.78, //ratio=px/mm, mm to px ratio
 	documentWidth: Math.floor(210*this.RATIO), //px
 	documentHeight: Math.floor(297*this.RATIO), //px
