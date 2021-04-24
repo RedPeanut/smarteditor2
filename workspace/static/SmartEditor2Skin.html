@@ -10,9 +10,10 @@
 </style>
 <script type="text/javascript" src="./js/lib/jindo2.all.js" charset="utf-8"></script>
 <script type="text/javascript" src="./js/lib/jindo_component.js" charset="utf-8"></script>
-<!-- TODO: <script type="text/javascript" src="./js/lib/jquery-3.6.0.js" charset="utf-8"></script> -->
+<script type="text/javascript" src="./js/lib/jquery-3.6.0.js" charset="utf-8"></script>
 <script type="text/javascript" src="./js/service/SE2M_Configuration.js" charset="utf-8"></script>	<!-- 설정 파일 -->
 <script type="text/javascript" src="./js/service/SE2BasicCreator.js" charset="utf-8"></script>
+<script type="text/javascript" src="./js/smart_editor2.js" charset="utf-8"></script>
 <script type="text/javascript" src="./js/webhwp.js" charset="utf-8"></script>
 <script type="text/javascript">
 window.onload = function() {
@@ -75,22 +76,22 @@ window.onload = function() {
 	<a href="#se2_iframe" class="blind">글쓰기영역으로 바로가기</a>
 
 	<div id="menuBar" class="menu_bar">
-    		<div class="title_panel">
+		<div class="title_panel menu_FILE">
 			<div class="property_title"><span>파일</span></div>
 			<div class="menu_box">
-				<a class="" href=""><div class="load btn_icon"></div><span>불러오기</span></a>
-				<a class="disabled" href=""><div class="save btn_icon"></div><span>저장하기</span></a>
-				<a class="" href=""><div class="download btn_icon"></div><span>다운로드</span></a>
-				<a class="disabled" href=""><div class="info btn_icon"></div><span>문서정보...</span></a>
+				<a class="item_LOAD " href="#"><div class="load btn_icon"></div><span>불러오기</span></a>
+				<a class="item_SAVE disabled" href=""><div class="save btn_icon"></div><span>저장하기</span></a>
+				<a class="item_DOWNLOAD " href="#"><div class="download btn_icon"></div><span>다운로드</span></a>
+				<a class="item_INFO disabled" href=""><div class="info btn_icon"></div><span>문서정보...</span></a>
 			</div>
 		</div>
-		<div class="title_panel"><div class="property_title"><span>편집</span></div></div>
-		<div class="title_panel"><div class="property_title"><span>보기</span></div></div>
-		<div class="title_panel"><div class="property_title"><span>입력</span></div></div>
-		<div class="title_panel"><div class="property_title"><span>서식</span></div></div>
-		<div class="title_panel"><div class="property_title"><span>쪽</span></div></div>
-		<div class="title_panel"><div class="property_title"><span>표</span></div></div>
-		<div class="title_panel"><div class="property_title"><span>도구</span></div></div>
+		<!-- <div class="title_panel title_EDIT"><div class="property_title"><span>편집</span></div></div>
+		<div class="title_panel title_VIEW"><div class="property_title"><span>보기</span></div></div>
+		<div class="title_panel title_INPUT"><div class="property_title"><span>입력</span></div></div>
+		<div class="title_panel title_FORMAT"><div class="property_title"><span>서식</span></div></div>
+		<div class="title_panel title_PAGE"><div class="property_title"><span>쪽</span></div></div>
+		<div class="title_panel title_TABLE"><div class="property_title"><span>표</span></div></div>
+		<div class="title_panel title_TOOL"><div class="property_title"><span>도구</span></div></div> -->
 	</div>
 
 	<div id="toolBar" class="tool_bar">

@@ -72,6 +72,10 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	
 	oEditor.registerPlugin(new nhn.husky.SE_EditingAreaManager("Canvas", oIRTextarea, /* htDimension */null, htParams.fOnBeforeUnload, elAppContainer));
 	oEditor.registerPlugin(new nhn.husky.SE_EditingArea(elAppContainer));
+
+	oEditor.registerPlugin(new nhn.husky.SE2M_Menubar(elAppContainer));
+	oEditor.registerPlugin(new nhn.husky.SE2M_ExecCommand(elAppContainer));
+	
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Doc(elAppContainer));
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Frame(elAppContainer));
 	//oEditor.registerPlugin(new nhn.husky.SE_EditingArea_Canvas(elAppContainer));			// Canvas 모드
@@ -87,7 +91,6 @@ window.createSEditor2 = function(elIRField, htParams, elSeAppContainer){
 	oEditor.registerPlugin(new nhn.husky.SE2M_UtilPlugin());
 	//oEditor.registerPlugin(new nhn.husky.SE_WYSIWYGStyler());
 
-	oEditor.registerPlugin(new nhn.husky.SE2M_Menubar(elAppContainer));
 	//oEditor.registerPlugin(new nhn.husky.SE2M_Toolbar(elAppContainer));
 	
 	/* oEditor.registerPlugin(new nhn.husky.Hotkey());											// 단축키
