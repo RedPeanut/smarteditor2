@@ -51,9 +51,13 @@ var prototype = node.derive({
         this.undo = [];
         this.redo = [];
         this._wordOrdinals = [];
+
+        //var one = per(characters(runs)).all();
+        //var two = per(characters(runs)).per(split(self.codes)).all();
         this.words = per(characters(runs)).per(split(self.codes)).map(function(w) {
             return word(w, self.codes);
         }).all();
+        
         this.layout();
         this.contentChanged.fire();
         this.select(0, 0, takeFocus);

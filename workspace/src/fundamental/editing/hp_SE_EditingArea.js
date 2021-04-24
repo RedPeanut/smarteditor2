@@ -26,8 +26,9 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 		this.scrollViewVertical = document.querySelector("#scrollViewVertical");
 		this.editCanvas = editingArea.querySelector("#editCanvas");
 		
-		this.doc = carota.doc();
-		
+		//this.doc = carota.doc();
+		this.doc = hwp.doc();
+
 		//주요 상수값들 및 변수 선언
 		this.RATIO = 3.78; //ratio=px/mm; mm to px ratio
 		this.documentWidth = Math.floor(210*this.RATIO); //px
@@ -143,7 +144,7 @@ nhn.husky.SE_EditingArea = jindo.$Class({
 			availableHeight = this.documentHeight-(this.paddingTop+this.paddingHead+this.paddingBottom+this.paddingTail);
 		
 		this.doc.layout(this.offsetX+this.paddingLeft, this.offsetY+this.paddingTop+this.paddingHead, availableWidth);
-		this.doc.draw(ctx, carota.rect(0, 0, availableWidth, availableHeight));
+		//this.doc.draw(ctx, carota.rect(0, 0, availableWidth, availableHeight));
 
 	},
 
