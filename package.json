@@ -68,6 +68,8 @@
     "webpack-dev-server": "^3.1.5",
   },
   "dependencies": {
-    "per": "0.1.7"
+    "per": "0.1.7",
+    "xmldoc": "^0.1.2",
+    "event-stream": "^3.1.1"
   }
 }
