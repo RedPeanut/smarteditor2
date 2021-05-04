@@ -69,7 +69,11 @@ module.exports = (env = {}) => {
         devServer: {
             port: 8000,
             contentBase: path.join(__dirname, 'dist'),
-            openPage: 'SmartEditor2Skin.html'
+            openPage: 'SmartEditor2Skin.html',
+            proxy: {
+                "/load": "http://localhost:8080",
+                "/download": "http://localhost:8080"
+            }
         }
     };
 };

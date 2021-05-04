@@ -24,7 +24,10 @@ nhn.husky.SE2M_ExecCommand = jindo.$Class({
 	name:"SE2M_ExecCommand",
 
 	$init: function(elAppContainer) {
-
+		this.$file = $("input[type=file]");
+		this.$file.on("change", function() {
+			document.loadForm.submit();
+		});
 	},
 
 	$BEFORE_MSG_APP_READY: function() {
@@ -44,7 +47,7 @@ nhn.husky.SE2M_ExecCommand = jindo.$Class({
 		//console.log("sCommand = " + sCommand);
 		switch(sCommand) {
 			case "FILE_LOAD":
-				
+				this.$file.click();
 				break;
 			case "FILE_DOWNLOAD":
 

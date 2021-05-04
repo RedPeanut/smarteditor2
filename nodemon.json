@@ -1,0 +1,3 @@
+{
+	"watch": ["workspace/src/server.js"]
+}

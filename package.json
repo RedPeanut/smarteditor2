@@ -12,7 +12,9 @@
     "docs:build": "gitbook build ./workspace/docs/user_guide ./build/docs/user_guide",
     "docs:publish": "gh-pages -d ./build/docs/user_guide -e ./user_guide -m 'update user_guide'",
     "docs:deploy": "npm run docs:build && npm run docs:publish",
-    "start": "webpack-dev-server --hot",
+    "client": "webpack-dev-server --hot",
+    "server": "nodemon workspace/src/server.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "webpack --env.production",
     "preversion": "npm test",
     "postversion": "git push --follow-tags && npm publish",
@@ -56,20 +58,24 @@
     "babel-plugin-transform-es3-property-literals": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "clean-webpack-plugin": "^3.0.0",
+    "concurrently": "^6.0.2",
     "copy-webpack-plugin": "^5.0.4",
     "eslint": "^6.2.1",
     "eslint-plugin-jest": "^22.13.7",
     "gh-pages": "^2.0.1",
     "gitbook-cli": "^2.3.2",
     "jest": "^24.8.0",
+    "nodemon": "^2.0.7",
     "uglifyjs-webpack-plugin": "^2.1.3",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5",
+    "webpack-dev-server": "^3.1.5"
   },
   "dependencies": {
     "per": "0.1.7",
     "xmldoc": "^0.1.2",
-    "event-stream": "^3.1.1"
+    "event-stream": "^3.1.1",
+    "express": "^4.17.1",
+    "multer": "^1.4.2"
   }
 }
