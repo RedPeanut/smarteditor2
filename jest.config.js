@@ -3,7 +3,7 @@
 
 module.exports = {
     collectCoverageFrom: [
-        "workspace/src/test/hwp/**/*.js"
+        "workspace/test/hwp/**/*.js"
     ], 
     coverageDirectory: "report/coverage",
     browser: true,
